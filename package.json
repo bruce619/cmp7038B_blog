@@ -1,0 +1,24 @@
+{
+  "name": "cmp7038b_blog",
+  "version": "1.0.0",
+  "description": "secure web blog",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bruce619/cmp7038B_blog.git"
+  },
+  "author": "PGT04",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bruce619/cmp7038B_blog/issues"
+  },
+  "homepage": "https://github.com/bruce619/cmp7038B_blog#readme",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.21"
+  }
+}
