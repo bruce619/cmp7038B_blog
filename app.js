@@ -18,6 +18,7 @@ app.use('/img', express.static(__dirname + '/src/public/img'));
 app.set('views', './src/views')
 app.set('view engine', 'ejs')
 
+// import your routes here
 app.use('/', require('./src/routes/auth'));
 
 // Listen to port
