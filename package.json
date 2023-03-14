@@ -4,7 +4,8 @@
   "description": "secure web blog",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -17,8 +18,11 @@
   },
   "homepage": "https://github.com/bruce619/cmp7038B_blog#readme",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
-    "nodemon": "^2.0.21"
+    "knex": "^2.4.2",
+    "nodemon": "^2.0.21",
+    "pg": "^8.10.0"
   }
 }
