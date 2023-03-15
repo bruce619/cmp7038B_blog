@@ -4,7 +4,7 @@
   "description": "secure web blog",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "nodemon app.js"
   },
   "repository": {
@@ -18,10 +18,12 @@
   },
   "homepage": "https://github.com/bruce619/cmp7038B_blog#readme",
   "dependencies": {
+    "chai": "^4.3.7",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "knex": "^2.4.2",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.21",
     "pg": "^8.10.0"
   }
