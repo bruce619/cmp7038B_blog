@@ -1,3 +1,4 @@
+const { Model } = require("objection");
 
 
 
