@@ -3,6 +3,8 @@
 //  * @returns { Promise<void> }
 //  */
 
+const path = require('path')
+
 exports.up = function(knex) {
 
     return knex.schema
@@ -20,7 +22,7 @@ exports.up = function(knex) {
         table.boolean('is_verified').defaultTo(false);
         table.boolean('two_fa_enabled').defaultTo(false);
         table.string('profile_picture')
-        .defaultTo('../../uploads/default.jpg');
+        .defaultTo(path.join('uploads', 'default-profile-image.jpg'));
         table.string('location');
         table.date('dob').nullable();
         table.string('bio').nullable();
