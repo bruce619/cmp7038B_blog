@@ -13,7 +13,6 @@ exports.up = function(knex) {
         table.string('email')
         .unique()
         .notNullable()
-        .checkRegex('/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/')
         .index()
         .comment('this is the email field');
         table.string('username', 100).unique().notNullable().index();
@@ -21,7 +20,6 @@ exports.up = function(knex) {
         table.boolean('is_verified').defaultTo(false);
         table.boolean('two_fa_enabled').defaultTo(false);
         table.string('profile_picture')
-        .checkRegex('/^.*\.(jpeg|jpg|png)$/i')
         .defaultTo('../../uploads/default.jpg');
         table.string('location');
         table.date('dob').nullable();
@@ -32,12 +30,14 @@ exports.up = function(knex) {
     })
     .createTable('user_temp', function(table) {
         table.increments('id').primary();
+        table.string('first_name', 255).notNullable().index();
+        table.string('last_name', 255).notNullable().index();
         table.string('email')
         .unique()
         .notNullable()
-        .checkRegex('/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/')
         .comment('this is the email field');
         table.string('username', 100).unique().notNullable();
+        table.string('password').notNullable();
         table.string('token').nullable();
     })
     .createTable('two_fa', function(table) {

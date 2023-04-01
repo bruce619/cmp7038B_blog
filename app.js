@@ -1,6 +1,6 @@
 // imports
 const config = require('./config/config');
-const express = require('express')
+const express = require('express');
 const app = express()
 const port = config.app.port
 
