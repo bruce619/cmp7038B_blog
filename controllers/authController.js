@@ -1,4 +1,7 @@
 // Authentication controller handles both registration and login process.
+const dbSetUp = require('../db/db-setup');
+
+dbSetUp();
 
 // registartion
 const registerView = (req, res) => {
