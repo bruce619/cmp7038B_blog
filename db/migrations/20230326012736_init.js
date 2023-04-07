@@ -1,9 +1,3 @@
-// /**
-//  * @param { import("knex").Knex } knex
-//  * @returns { Promise<void> }
-//  */
-
-const path = require('path')
 
 exports.up = function(knex) {
 
@@ -21,8 +15,7 @@ exports.up = function(knex) {
         table.boolean('admin').defaultTo(false);
         table.boolean('is_verified').defaultTo(false);
         table.boolean('two_fa_enabled').defaultTo(false);
-        table.string('profile_picture')
-        .defaultTo(path.join(__dirname, 'uploads', 'default-profile-image.jpg'));
+        table.string('profile_picture').defaultTo('/uploads/default-profile-image.jpg');
         table.string('location');
         table.date('dob').nullable();
         table.string('bio').nullable();
