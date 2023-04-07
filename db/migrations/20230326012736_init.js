@@ -22,7 +22,7 @@ exports.up = function(knex) {
         table.boolean('is_verified').defaultTo(false);
         table.boolean('two_fa_enabled').defaultTo(false);
         table.string('profile_picture')
-        .defaultTo(path.join('uploads', 'default-profile-image.jpg'));
+        .defaultTo(path.join(__dirname, 'uploads', 'default-profile-image.jpg'));
         table.string('location');
         table.date('dob').nullable();
         table.string('bio').nullable();

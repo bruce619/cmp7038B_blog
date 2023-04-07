@@ -1,14 +1,12 @@
-require('dotenv').config({path: '../.env'});
 const knex = require('knex');
+const knexConfig  = require('../config/knexfile');
 const { Model } = require('objection');
-const config = require('../config/config');
-const environment = config.app.environment; // 'development' or 'production'
-const knexfile = require('../config/knexfile')(environment);
 
-// Give the knex instance to objection.
-dbSetUp = () => {
-    const db = knex(knexfile);
-    Model.knex(db)
-};
+function setupDB() {
+    // use the development env
+    const db = knex(knexConfig.development)
+    Model.knex(db);    
+}
 
-module.exports = dbSetUp;
+
+module.exports = setupDB;

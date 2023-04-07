@@ -1,6 +1,5 @@
 const { Model } = require("objection");
 
-
 // User model.
 class UserTemp extends Model {
 

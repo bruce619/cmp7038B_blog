@@ -1,6 +1,5 @@
 const { Model } = require("objection");
 
-
 // User model.
 class TwoFA extends Model {
     static get tableName() {

@@ -1,11 +1,10 @@
-const { Model } = require("objection");
-
+const { Model } = require('objection');
 
 // User model.
 class User extends Model {
-    static get tableName() {
-      return 'users';
-    }
+  static get tableName() {
+    return 'users';
+  }
 }
 
-module.export = User;
+module.exports = User;
