@@ -1,10 +1,10 @@
 const { Model } = require("objection");
 
-// User model.
+// Post model.
 class Post extends Model {
     static get tableName() {
       return 'posts';
     }
 }
 
-module.export = Post;
+module.exports = Post;

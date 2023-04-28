@@ -3,9 +3,11 @@ const express = require('express')
 const router = express.Router();
 const authController = require('../controllers/authController');
 
-router.get('/register', authController.getRegisterView);
-router.post('/register', authController.postRegistrationView);
-router.get('/login', authController.getLoginView);
-router.post('/login', authController.postLoginView);
+router.get('/register', authController.registerationView);
+router.post('/register', authController.processRegistration);
+router.get('/verify/:token', authController.verifyEmail);
+router.get('/login', authController.loginView);
+router.post('/login', authController.processLogin);
+router.get('/logout', authController.logout);
 
 module.exports = router;
