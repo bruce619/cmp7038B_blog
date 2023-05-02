@@ -1,41 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register</title>
+    <!-- Fontawesome CDN  -->
+    <script src="https://kit.fontawesome.com/62765ee528.js" crossorigin="anonymous"></script>
+    <!-- css -->
+    <link rel="stylesheet" href="/css/styles.css" />
+    <!-- js -->
     <script src="/js/register.js" defer></script>
-</head>
-<body>
-    <h1>Here is the registration page</h1>
-
-    <form action="/register" id="reg_form" method="POST">
-        <div>
-            <input type="text" name="first_name" id="first_name" placeholder="First name" required />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <div class="navbar__brand">
+            <img src="/img/company-logo.png" alt="logo" />
+          </div>
+          <div class="navbar__links">
+            <ul>
+              <li class="nav-link"><a href="/">Home</a></li>
+              <li class="nav-link"><a href="/login">Login</a></li>
+              <li class="nav-link"><a href="/register">Sign Up</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <div class="page-heading">
+          <span class="line"></span>
+          <h2>Create Account</h2>
+          <span class="line"></span>
         </div>
-        <div>
-            <input type="text" name="last_name" id="last_name" placeholder="Last name" required />
-        </div>
-        <div>
-          <input type="text" name="username" id="username" placeholder="Username" required />
-        </div>
-        <div>
-            <input name="email" id="email" placeholder="Email" required />
-        </div>
-        <div>
-          <input type="password" name="password" id="password" placeholder="Password" required />
-        </div>
-        <div>
-            <input type="password" id="confirm_password" placeholder="Confirm Password" required />
-        </div>
-        <div>
-          <button type="submit" id="reg_form_btn">Login</button>
-        </div>
-        <div>
+        <div class="signup-container">
+          <form action="/register" method="POST" id="reg_form" class="signup-form">
+            <div class="formGroup">
+              <input type="text" name="first_name" id="first_name" placeholder="Firstname" required/>
+            </div>
+            <div class="formGroup">
+              <input type="text" name="last_name" id="last_name" placeholder="Lastname" required/>
+            </div>
+            <div class="formGroup">
+              <input type="text" name="username" id="username" placeholder="Username" required/>
+            </div>
+            <div class="formGroup">
+              <input type="emai" name="email" id="email" placeholder="email" required/>
+            </div>
+            <div class="formGroup">
+              <input type="password" name="password" id="password" placeholder="Password" required/>
+            </div>
+            <div class="formGroup">
+              <input type="password" id="confirm_password" placeholder="Confirm Password" required/>
+            </div>
+            <button class="btn__signup">Sign up</button>
+          </form>
+          <p class="toggle_signup">
+            Already a signed up user? <a href="/login">Login</a>
+          </p>
+          <div>
             <div id="error"></div>
+          </div>
         </div>
-    </form>
+      </div>
+    </main>
 
-</body>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__top-content">
+          <span>
+            <a href="#">
+              <i class="fa-brands fa-facebook-f"></i>
+            </a>
+          </span>
+          <span>
+            <a href="#">
+              <i class="fa-brands fa-twitter"></i>
+            </a>
+          </span>
+          <span>
+            <a href="#">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+          </span>
+        </div>
+        <div class="footer__bottom-content">
+          <p>@2023 C.H.O Blog</p>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>

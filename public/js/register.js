@@ -14,10 +14,11 @@ function submitRegistrationForm(e){
 
     e.preventDefault();
 
-    // regexPatterns
+    // regexPatterns only accept letters and numbers
     const usernamePattern = /^[^!%^()\-\*&~`]{3,30}$/;
     const isValidUsername = usernamePattern.test(username.value);
 
+    // regexPatterns only accept letters, numbers, @, #, and $
     const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[$@#])[A-Za-z\d$@#]{8,20}$/;
     const isValidPassword = passwordPattern.test(password.value);
 
@@ -48,7 +49,7 @@ function submitRegistrationForm(e){
     }
 
     if (messages.length > 0){
-        e.preventDefault()
+        e.preventDefault();
         error.innerHTML = messages.join('<br />')
     }
 

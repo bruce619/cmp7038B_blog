@@ -36,3 +36,7 @@ exports.getUser = async (req, res) => {
 
 }
 
+
+exports.profileView = async (req, res) => {
+  res.render('profile');
+}

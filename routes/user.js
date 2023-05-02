@@ -7,6 +7,7 @@ const { loginRequired } = require('../utility/utils');
 
 router.get('/users', userController.getUsers);
 router.get('/users/:id', loginRequired, userController.getUser);
+router.get('/profile', userController.profileView);
 
 
 module.exports = router;
