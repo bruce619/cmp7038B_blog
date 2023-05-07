@@ -27,7 +27,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // initialize flash middleware
-app.use(flash());
 app.use(cors());
 
 //Configure session middleware
@@ -53,12 +52,14 @@ app.use(session({
     }
   }));
 
+app.use(flash());
 
-// app.use(function(req, res, next) {
-// res.locals.success_messages = req.flash('success');
-// res.locals.error_messages = req.flash('error');
-// next();
-// });
+app.use(function(req, res, next) {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  res.locals.info = req.flash('info');
+  next();
+});
 
 
 // use static files: css, js, img

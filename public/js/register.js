@@ -6,7 +6,7 @@ const username = document.querySelector('#username');
 const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 const confirm_password = document.querySelector('#confirm_password');
-const error = document.querySelector('#error')
+const error = document.querySelector('#error-msg')
 const reg_form = document.querySelector('#reg_form')
 
 
@@ -31,35 +31,35 @@ reg_form.addEventListener("submit", e => {
     let messages = [];
 
     if (first_name.value.length === 0) {
-        messages.push("Invalid. Kindly input your First Name")
+        messages.push("<i class='fa fa-times-circle'></i>Invalid. Kindly input your First Name")
     }
 
     if (!isValidFirstName){
-        messages.push("Invalid name entry")
+        messages.push("<i class='fa fa-times-circle'></i>Invalid name entry")
     }
 
     if (last_name.value.length === 0) {
-        messages.push("Invalid. Kindly input your Last Name")
+        messages.push("<i class='fa fa-times-circle'></i>Invalid. Kindly input your Last Name")
     }
 
     if (!isValidLastName){
-        messages.push("Invalid name entry")
+        messages.push("<i class='fa fa-times-circle'></i>Invalid name entry")
     }
 
     if (!isValidUsername){
-        messages.push('Username must be between 3 and 55 characters, and can only contain alphanumeric characters');
+        messages.push("<i class='fa fa-times-circle'></i>Username must be between 3 and 55 characters, and can only contain alphanumeric characters");
     }
 
     if (email.value.length === 0){
-        messages.push("Invalid entry. Must have an email")
+        messages.push("<i class='fa fa-times-circle'></i>Invalid entry. Must have an email")
       }
 
     if (!isValidPassword){
-        messages.push('Password must contain a minimum of 8 characters, and contain at least one capital letter and one of $, @, or #');
+        messages.push('<i class="fa fa-times-circle"></i>Invalid entry. Password must cointain a minimum of 8 characters, and contain at least one capital letter, one number, and one of the special characters $, @, or #');
     }
 
     if (confirm_password.value !== password.value) {
-        messages.push("Passwords do not match")
+        messages.push("<i class='fa fa-times-circle'></i>Passwords do not match")
     }
 
     if (messages.length > 0){

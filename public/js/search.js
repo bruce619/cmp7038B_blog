@@ -1,5 +1,5 @@
 const search = document.querySelector('#search');
-const error = document.querySelector('#error')
+const error = document.querySelector('#error-msg');
 const search_form = document.querySelector('#search_form');
 
 search_form.addEventListener("submit", e => {
@@ -14,11 +14,11 @@ search_form.addEventListener("submit", e => {
     const isValidSearch = searchPattern.test(search.value);
 
     if (search.value.length === 0) {
-        messages.push("Empty search");
+        messages.push("<i class='fa fa-times-circle'></i>Empty search");
     }
 
     if (!isValidSearch){
-        messages.push('Invalid search entry');
+        messages.push("<i class='fa fa-times-circle'></i>Invalid search entry");
     }
 
     if (messages.length > 0){
