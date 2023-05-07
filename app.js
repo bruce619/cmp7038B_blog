@@ -6,9 +6,10 @@ const bodyParser = require('body-parser');
 const store = require('./middleware/authentication_middleware');
 const flash = require('connect-flash');
 const crypto = require('crypto');
+const cors = require('cors')
 
 // generate random secure sessionID using crypto
-function generateRandomSessionId() {
+generateRandomSessionId = () => {
   return crypto.randomBytes(16).toString('hex');
 }
 
@@ -27,6 +28,7 @@ app.use(bodyParser.json())
 
 // initialize flash middleware
 app.use(flash());
+app.use(cors());
 
 //Configure session middleware
 app.use(session({

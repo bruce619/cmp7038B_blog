@@ -1,6 +1,6 @@
 function isValidEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  const email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return email_regex.test(email);
 }
 
 function checkEmail(email){
@@ -12,14 +12,14 @@ function checkEmail(email){
 }
 
 
-function isValidImageExtension(fileName) {
-  const imageExtensionsRegex = /\.(jpg|jpeg|png)$/i;
-  return imageExtensionsRegex.test(fileName);
+function isValidImageExtension(file_name) {
+  const image_extensions_regex = /\.(jpg|jpeg|png)$/i;
+  return image_extensions_regex.test(file_name);
 }
 
-function checkImageExtension (fileName){
-    if (isValidImageExtension(fileName)){
-        return fileName
+function checkImageExtension (file_name){
+    if (isValidImageExtension(file_name)){
+        return file_name
     }else{
         return false
     }

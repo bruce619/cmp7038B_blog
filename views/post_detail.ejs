@@ -11,14 +11,14 @@
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- js -->
     <script src="/js/search.js" defer></script>
-    <script src="/js/post.js" defer></script>
+    <script src="/js/post_detail.js" defer></script>
   </head>
   <body>
     <header>
       <div class="container">
         <nav class="navbar">
           <div class="navbar__brand">
-            <img src="/img/company-logo.png" alt="logo" />
+            <a href="/"><img src="/img/company-logo.png" alt="logo" /></a>
           </div>
           <div class="navbar__links">
             <ul>
@@ -43,19 +43,7 @@
       </div>
     </div>
     <main>
-        <div class="container home">
-            <div class="searchbar-container">
-                <div class="searchbar">
-                    <form action="#" method="POST" id="login_form">
-                        <input type="text" id="searchbar" />
-                        <button type="submit">Search</button>
-                    </form>
-                </div>
-                <div>
-                    <div id="error"></div>
-                </div>
-            </div>
-        
+        <div class="container home">       
             <div class="main">
             <div class="main__content">
                 <div class="post-card">
@@ -108,7 +96,7 @@
             <aside class="aside">
                 <div class="aside__content">
                 <div class="anouncement__image">
-                    <img src="/images/image_placeholder.png" alt="announcements" />
+                  <img src="/img/image_placeholder.png" alt="announcements" />
                 </div>
                 <h3>Announcements</h3>
                 <p>Lorem ipsum dolor sit amet.</p>

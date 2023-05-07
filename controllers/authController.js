@@ -1,6 +1,6 @@
 // Authentication controller handles both registration and login process.
 const setupDB = require('../db/db-setup');
-const User = require('../models/user');
+const { User, UserTemp } = require('../models/user');
 
 setupDB();
 
@@ -16,7 +16,10 @@ exports.verifyEmail = async (req, res) => {
 
 // POST: registration
 exports.processRegistration = async (req, res) => {
-    res.json(req.body)
+
+    // joi schema and validation
+
+    // res.json(req.body)
 }
 
 // GET: login view

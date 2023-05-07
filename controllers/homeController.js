@@ -5,5 +5,12 @@ setupDB();
 
 
 exports.homeView = async (req, res) => {
+
     res.render('home');
+}
+
+
+exports.searchPost = async (req, res) => {
+    res.render('home');
+
 }

@@ -17,7 +17,7 @@
       <div class="container">
         <nav class="navbar">
           <div class="navbar__brand">
-            <img src="/img/company-logo.png" alt="logo" />
+            <a href="/"><img src="/img/company-logo.png" alt="logo" /></a>
           </div>
           <div class="navbar__links">
             <ul>
@@ -34,8 +34,8 @@
         <div class="container home">
             <div class="searchbar-container">
                 <div class="searchbar">
-                    <form action="#" method="POST" id="login_form">
-                        <input type="text" id="searchbar" />
+                    <form action="/search" method="GET" id="search_form">
+                        <input type="text" id="search" placeholder="Search..." />
                         <button type="submit">Search</button>
                     </form>
                 </div>
