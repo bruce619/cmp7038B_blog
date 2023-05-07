@@ -1,23 +1,46 @@
 // Authentication controller handles both registration and login process.
-const dbSetUp = require('../db/db-setup');
+const setupDB = require('../db/db-setup');
+const { User, UserTemp } = require('../models/user');
 
-dbSetUp();
+setupDB();
 
-// registartion
-const registerView = (req, res) => {
-    res.render("register", {
+// GET: registration view
+exports.registerationView = async (req, res) => {
+    res.render("register");
+}
 
+// verify a user's email
+exports.verifyEmail = async (req, res) => {
+    res.json(res.body)
+}
+
+// POST: registration
+exports.processRegistration = async (req, res) => {
+
+    // joi schema and validation
+
+    // res.json(req.body)
+}
+
+// GET: login view
+exports.loginView = async (req, res) => {
+    res.render("login");
+}
+
+// POST: login view
+exports.processLogin = async (req, res) => {
+    res.json(req.body)
+}
+
+// GET: logout
+exports.logout = async (req, res) => {
+    // destroy session
+    req.session.destroy(function (err) {
+        if (err){
+            return console.log(`Error ${err}`);
+        }
+        // redirect to login
+        res.redirect('/login')
     });
 }
 
-// registartion
-const loginView = (req, res) => {
-    res.render("login", {
-        
-    });
-}
-
-module.exports =  {
-    registerView,
-    loginView
-};

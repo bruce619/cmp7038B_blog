@@ -2,13 +2,6 @@
 require('dotenv').config({path: '../.env'})
 const config = require('./config');
 
-console.log(`here is app port password: ${config.app.port}`)
-console.log(`here is the password: ${config.db.password}`)
-
-/**
- * @type { Object.<string, import("knex").Knex.Config> }
- */
-
 module.exports = {
 
   development: {

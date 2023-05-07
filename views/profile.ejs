@@ -4,13 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register</title>
+    <title>Profile</title>
     <!-- Fontawesome CDN  -->
     <script src="https://kit.fontawesome.com/62765ee528.js" crossorigin="anonymous"></script>
     <!-- css -->
     <link rel="stylesheet" href="/css/styles.css" />
-    <!-- js -->
-    <script src="/js/register.js" defer></script>
+
   </head>
   <body>
     <header>
@@ -22,8 +21,8 @@
           <div class="navbar__links">
             <ul>
               <li class="nav-link"><a href="/">Home</a></li>
-              <li class="nav-link"><a href="/login">Login</a></li>
-              <li class="nav-link"><a href="/register">Sign Up</a></li>
+              <li class="nav-link"><a href="#">Profile</a></li>
+              <li class="nav-link"><a href="/logout">Logout</a></li>
             </ul>
           </div>
         </nav>
@@ -33,11 +32,27 @@
       <div class="container">
         <div class="page-heading">
           <span class="line"></span>
-          <h2>Create Account</h2>
+          <h2>Profile</h2>
           <span class="line"></span>
         </div>
         <div class="signup-container">
-          <form action="/register" method="POST" id="reg_form" class="signup-form">
+          <form action="/profile" method="POST" class="signup-form">
+            <div class="user">
+              <h3>Chimuanya Ibecheozor</h3>
+              <div class="user-image">
+                <img src="/img/default-profile-image.jpg" alt="profile-pics" />
+              </div>
+              <label for="profile-image">Choose Picture</label>
+              <input
+                type="file"
+                name="profile-image"
+                id="profile-image"
+                accept=".jpg, .png, . jpeg" />
+            </div>
+
+            <div class="formGroup">
+              <input type="emai" name="email" id="email" placeholder="email" readonly/>
+            </div>
             <div class="formGroup">
               <input type="text" name="first_name" id="first_name" placeholder="Firstname" required/>
             </div>
@@ -48,19 +63,28 @@
               <input type="text" name="username" id="username" placeholder="Username" required/>
             </div>
             <div class="formGroup">
-              <input type="emai" name="email" id="email" placeholder="email" required/>
+              <input type="text" name="location" id="location" placeholder="e.g Norwich, United Kingdom" required/>
             </div>
             <div class="formGroup">
-              <input type="password" name="password" id="password" placeholder="Password" required/>
+              <textarea
+                name="bio"
+                placeholder="Bio"
+                id="bio"
+                cols="30"
+                rows="10"></textarea>
             </div>
-            <div class="formGroup">
-              <input type="password" id="confirm_password"  placeholder="Confirm Password" required/>
-            </div>
-            <button class="btn__signup">Sign up</button>
+            <label for="Auth" class="Auth_label">
+              <span>Activate 2 Factor Authentication</span>
+              <span class="Auth_checkbox">
+                <input type="checkbox" name="two_fa" id="Auth" />
+                <span class="switch">
+                  <span class="yes">Yes</span>
+                  <span class="no">No</span>
+                </span>
+              </span>
+            </label>
+            <button class="btn__signup">Update Profile</button>
           </form>
-          <p class="toggle_signup">
-            Already a signed up user? <a href="/login">Login</a>
-          </p>
           <div>
             <div id="error"></div>
           </div>

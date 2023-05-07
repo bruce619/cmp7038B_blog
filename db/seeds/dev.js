@@ -9,7 +9,6 @@ const { checkEmail } = require("../../utility/validations");
 exports.seed = async function(knex) {
   // truncate existing tables
   await knex.raw('TRUNCATE TABLE "posts" CASCADE');
-  await knex.raw('TRUNCATE TABLE "two_fa" CASCADE');
   await knex.raw('TRUNCATE TABLE "users" CASCADE');
   await knex.raw('TRUNCATE TABLE "user_temp" CASCADE');
 

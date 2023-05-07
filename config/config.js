@@ -1,7 +1,5 @@
 require('dotenv').config();
 
-console.log(`ENV for app ${process.env.NODE_ENV}`)
-
 const env = process.env.NODE_ENV || 'development'; // 'development' or 'production'
 
 const development = { 
