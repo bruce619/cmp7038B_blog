@@ -5,7 +5,6 @@ setupDB();
 
 
 exports.homeView = async (req, res) => {
-
     res.render('home');
 }
 

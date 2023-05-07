@@ -54,16 +54,21 @@
               <input type="password" name="password" id="password" placeholder="Password" required/>
             </div>
             <div class="formGroup">
-              <input type="password" id="confirm_password"  placeholder="Confirm Password" required/>
+              <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required/>
             </div>
             <button class="btn__signup">Sign up</button>
           </form>
           <p class="toggle_signup">
             Already a signed up user? <a href="/login">Login</a>
           </p>
-          <div>
-            <div id="error"></div>
-          </div>
+            <% if (error.length > 0) { %>
+              <div id="error-msg">
+                <i class="fa fa-times-circle"></i>
+                <%= error %>
+              </div>
+            <%}else{%>
+              <div id="error-msg"></div>
+            <%}%>
         </div>
       </div>
     </main>

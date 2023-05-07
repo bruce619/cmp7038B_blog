@@ -2,7 +2,7 @@
 // user input
 const email = document.querySelector('#email');
 const password = document.querySelector('#password');
-const error = document.querySelector('#error')
+const error = document.querySelector('#error-msg');
 const login_form = document.querySelector('#login_form')
 
 
@@ -17,7 +17,7 @@ login_form.addEventListener("submit", e => {
     let messages = [];
 
     if (email.value.length === 0){
-        messages.push("Invalid entry. Must have an email");
+        messages.push("<i class='fa fa-times-circle'></i>Invalid entry. Must have an email");
       }
 
     if (!isValidPassword){

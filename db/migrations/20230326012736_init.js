@@ -29,13 +29,11 @@ exports.up = function(knex) {
         table.increments('id').primary();
         table.string('first_name', 200).notNullable().index();
         table.string('last_name', 200).notNullable().index();
-        table.string('email')
-        .unique()
-        .notNullable()
-        .comment('this is the email field');
+        table.string('email').unique().notNullable().index();
         table.string('username', 55).unique().notNullable();
         table.string('password').notNullable();
-        table.string('token').nullable();
+        table.string('token');
+        table.timestamp('created_at').defaultTo(knex.fn.now());
     })
     .createTable('posts', function(table) {
         table.uuid('id').defaultTo(knex.raw('gen_random_uuid ()')).primary();

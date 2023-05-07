@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In</title>
+    <title>Log In</title>
     <!-- Fontawesome CDN  -->
     <script src="https://kit.fontawesome.com/62765ee528.js" crossorigin="anonymous"></script>
     <!-- css -->
@@ -52,9 +52,29 @@
           <p class="toggle_signup">
             Not a registered user? <a href="/register">Sign up</a>
           </p>
-          <div>
-            <div id="error"></div>
-          </div>
+          <% if (error.length > 0) {%>
+            <div id="error-msg">
+              <i class="fa fa-times-circle"></i>
+              <%= error %>
+            </div>
+          <%}else{%>
+            <div id="error-msg"></div>
+          <%}%>
+
+          <% if (success.length > 0){%>
+            <div id="success-msg">
+              <i class="fa fa-check"></i>
+              <%= success %>
+            </div>
+          <%}%>
+
+          <% if (info.length > 0){%>
+            <div id="info-msg">
+              <i class="fa fa-info-circle"></i>
+              <%= info %>
+            </div>
+          <%}%>
+
         </div>
       </div>
     </main>

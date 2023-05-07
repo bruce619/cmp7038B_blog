@@ -28,7 +28,7 @@ function getRandomAlphanumericString(length){
   }
 
 
-function loginRequired(res, req, next){
+function loginRequired(req, res, next){
     if (req.session && req.session.userId) {
         // User is authenticated, proceed with the next
         return next();

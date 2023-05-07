@@ -43,6 +43,13 @@ In the .env file create environment variables for development and production env
 - DEV_DB_DATABASE=blog
 - DEV_DB_PASSWORD=your local pg db password
 
+> email server credentials
+- EMAIL_USERNAME=
+- EMAIL_PASSWORD=
+- OAUTH_CLIENT_ID=
+- OAUTH_CLIENT_SECRET=
+- OAUTH_REFRESH_TOKEN=
+
 
 > prod database
 - PROD_DB_USER=
