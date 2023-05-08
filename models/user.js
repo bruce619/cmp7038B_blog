@@ -1,5 +1,6 @@
 const { Model } = require('objection');
 
+
 // temp user model
 class UserTemp extends Model {
   static get tableName() {
@@ -41,6 +42,22 @@ class User extends Model {
   // method to get full name
   fullName() {
     return this.firstName + ' ' + this.lastName;
+  }
+
+  static get relationMappings (){
+    
+    const Post = require('./post');
+
+    return {
+      posts: {
+        relation: Model.HasManyRelation,
+        modelClass: Post,
+        join: {
+          from: 'users.id',
+          to: 'posts.author'
+        }
+      }
+    }
   }
   
 }

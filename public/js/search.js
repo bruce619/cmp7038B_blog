@@ -8,8 +8,8 @@ search_form.addEventListener("submit", e => {
 
     let messages = [];
 
-    // regexPatterns only accept aplhanumeric characters
-    const searchPattern = /^[a-zA-Z0-9,:\.]+$/;
+    // regexPatterns only accept aplhanumeric characters with comma, period, colon, and space
+    const searchPattern = /^[a-zA-Z0-9][a-zA-Z0-9,:.\s]*$/;
     // check if it is valid string
     const isValidSearch = searchPattern.test(search.value);
 

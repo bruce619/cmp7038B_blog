@@ -10,6 +10,8 @@ function hashPassword(password){
 
 // function to compare hash password and normal password
 function comparePasswords(password, passWord){
+  // password: user input password
+  // passWord: hashed password
   return bcrypt.compare(password, passWord);
 }
 

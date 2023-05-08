@@ -1,4 +1,3 @@
-const Joi = require("joi");
 const { Model } = require("objection");
 
 // Post model.
@@ -7,20 +6,19 @@ class Post extends Model {
       return 'posts';
     }
 
-    title() {
-      return this.title;
-    }
+    static get relationMappings(){
+      const { User } = require("./user");
 
-    static get jsonSchema() {
-      return Joi.object({
-        title: Joi.string().min(2).max(50).pattern(new RegExp('^[a-zA-Z0-9,:\.]+$'))
-        .messages({
-          'string.pattern.base': 'invalid title entry'
-        })
-        .required(),
-        body: Joi.string().required()
-      })
-
+      return {
+        user: {
+          relation: Model.BelongsToOneRelation,
+          modelClass: User,
+          join: {
+            from: 'posts.author',
+            to: 'users.id'
+          }
+        }
+      }
     }
 }
 
