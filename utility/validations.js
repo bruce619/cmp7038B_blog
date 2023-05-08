@@ -66,10 +66,22 @@ const tokenSchema = Joi.object({
     })
 })
 
+const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string()
+    .pattern(RegExp(passwordPattern))
+    .required()
+    .messages({
+        'string.pattern.base': 'Email or Password is incorrect.'
+    })
+
+})
+
 
 module.exports = {
     checkEmail,
     checkImageExtension,
     registrationSchema,
-    tokenSchema
+    tokenSchema,
+    loginSchema
 }

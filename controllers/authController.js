@@ -2,8 +2,8 @@
 const {transporter, mailObject} = require('../config/email_config');
 const setupDB = require('../db/db-setup');
 const { User, UserTemp } = require('../models/user');
-const { getRandomAlphanumericString, hashPassword } = require('../utility/utils');
-const { registrationSchema, tokenSchema } = require('../utility/validations');
+const { getRandomAlphanumericString, hashPassword, comparePasswords } = require('../utility/utils');
+const { registrationSchema, tokenSchema, loginSchema } = require('../utility/validations');
 
 setupDB();
 
@@ -84,7 +84,7 @@ exports.verifyEmail = async (req, res) => {
     const {error, value } = tokenSchema.validate(req.params)
 
     if (error){
-        res.json({error: error.details[0].message})
+        res.render('login', {error: error.details[0].message})
         return
     }
 
@@ -111,19 +111,48 @@ exports.verifyEmail = async (req, res) => {
         console.error(err)
     })
     } else {
-        res.render('login', {error: "Account does not exists. Try registring if you haven't. If you have try verifying your email by clicking on the verification link sent to your email"})
+        res.render('login', {error: "Invalid verification link token"})
     }
 
 }
 
 // GET: login view
 exports.loginView = async (req, res) => {
-    res.render("login", {});
+    res.render("login", {error: ''});
 }
 
 // POST: login view
 exports.processLogin = async (req, res) => {
-    res.json(req.body)
+
+    // validate login form data
+    const {error, value} = loginSchema.validate(req.body)
+
+    if (error){
+        res.render('login', {error: error.details[0].message})
+        return
+    }
+
+    // first check if the user exists
+    const user = await User.query().where('email', value.email).first();
+    // if user doesn't exists return invalid or email
+    if (!user){
+        res.render('login', {error: "Invalid Email or Password"})
+        return
+    }
+
+    // compare user input passwword and hashed user password that was saved in the db
+    const passwordExists = await comparePasswords(value.password, user.password);
+
+    // if it doesn't match return invalid email or password message
+    if (!passwordExists){
+        res.render('login', {error: "Invalid Email or Password"})
+        return
+    }
+
+    
+    req.session.userId = user.id
+
+    res.redirect("/")
 }
 
 // GET: logout
