@@ -19,8 +19,6 @@ exports.processRegistration = async (req, res) => {
 
     const {error, value } = registrationSchema.validate(req.body)
 
-    console.log(value)
-
     // check if error exists in user input
     if (error){
         res.render('register', {error: error.details[0].message})

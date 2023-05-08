@@ -49,42 +49,17 @@
                 <div class="post-card">
                 <div class="post-card__heading">
                     <div class="user">
-                        <img src="/img/default-profile-image.jpg" alt="profile-pics" />
-                    <p>Bruce06</p>
+                      <img src="<%= post.user.profile_picture %>" alt="profile-pics" />
+                      <p><%= post.user.username %></p>
                     </div>
                     <div class="time">
-                    <p>2023-03-01</p>
-                    <p>13:00</p>
+                    <p><%= post.created_at.toLocaleString() %></p>
                     </div>
                 </div>
                 <div class="post-card__content">
                     <h2>Lorem, ipsum dolor.</h2>
                     <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Dolores voluptas fugit aliquid hic iure quia sed consequatur,
-                    consectetur eaque voluptatum dolor quod magnam labore dolorum
-                    temporibus exercitationem provident, odio ad. In iure quo
-                    molestias nostrum perspiciatis omnis illum error vel saepe
-                    impedit modi aperiam fugiat consequuntur dignissimos soluta,
-                    delectus pariatur explicabo, ipsam culpa esse sit! Eos, et
-                    rerum quaerat nam vitae, in ab, ipsa veniam ea obcaecati
-                    debitis molestias labore. Officiis unde quos et dolor ea
-                    maxime iure nulla sapiente autem quia! Amet nesciunt, deserunt
-                    itaque asperiores officia incidunt velit vel, nam nemo quidem
-                    maiores libero. Architecto porro nam omnis magnam explicabo
-                    corporis dolorem quam, beatae voluptates recusandae quaerat ea
-                    inventore molestiae, delectus harum sint. Beatae rem
-                    temporibus quis eius eligendi magnam vel perferendis iusto
-                    voluptas commodi ipsum ab aut dolore quod, labore fuga. Alias
-                    ducimus beatae quibusdam, iure iusto, optio repellat cum
-                    placeat voluptatum minima voluptatem vitae nesciunt
-                    reprehenderit. Amet, cupiditate eius saepe voluptas temporibus
-                    consectetur? Nihil eveniet molestiae eum voluptas ut velit
-                    asperiores vel non repellat error culpa illo nesciunt
-                    accusamus ipsa fuga eaque saepe sed nam, animi maxime dolore
-                    expedita accusantium maiores. Tenetur mollitia dolorum vel
-                    facere quos rerum totam culpa officia. Nisi maxime qui
-                    assumenda placeat?
+                    <%= post.body %>
                     </p>
                     <div class="post-card__actions">
                     <button class="btn btn__update">Update</button>

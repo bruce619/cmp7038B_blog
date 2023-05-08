@@ -30,6 +30,9 @@ function checkImageExtension (file_name){
 const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[$@#])[A-Za-z\d$@#]{8,}$/;
 const namePattern = /^[a-zA-Z]+$/
 const tokenPattern = /^[a-zA-Z0-9]+$/i
+const uuidPattern = /^[a-zA-Z0-9-]+$/i
+const searchPattern = /^[a-zA-Z0-9][a-zA-Z0-9,:.\s]*$/;
+
 
 const registrationSchema = Joi.object({
     first_name: Joi.string().min(2).max(255)
@@ -77,11 +80,34 @@ const loginSchema = Joi.object({
 
 })
 
+const uuidSchema = Joi.object({
+  id: Joi.string()
+    .pattern(RegExp(uuidPattern))
+    .required()
+    .messages({
+        'string.pattern.base': 'Invalid ID.'
+    })
+
+});
+
+const searchSchema = Joi.object({
+  search: Joi.string()
+    .pattern(RegExp(uuidPattern))
+    .min(1)
+    .required()
+    .messages({
+        'string.pattern.base': 'Invalid Search.'
+    })
+
+});
+
 
 module.exports = {
     checkEmail,
     checkImageExtension,
     registrationSchema,
     tokenSchema,
-    loginSchema
+    loginSchema,
+    uuidSchema,
+    searchSchema
 }

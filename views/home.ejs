@@ -34,8 +34,8 @@
         <div class="container home">
             <div class="searchbar-container">
                 <div class="searchbar">
-                    <form action="/search" method="GET" id="search_form">
-                        <input type="text" id="search" placeholder="Search..." />
+                    <form action="/" method="GET" id="search_form">
+                        <input type="text" id="search" name="search" placeholder="Search for post" />
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -63,82 +63,127 @@
             <%}%>
             <div class="main">
             <div class="main__content">
-                <div class="post-card">
-                <div class="post-card__heading">
-                    <div class="user">
-                        <img src="/img/default-profile-image.jpg" alt="profile-pics" />
-                        <p>Bruce06</p>
+
+              <% if (posts.length>0){%>
+
+                <% posts.forEach(post => {%>
+                  <div class="post-card">
+                    <div class="post-card__heading">
+                        <div class="user">
+                            <img src="<%= post.user.profile_picture %>" alt="profile-pics" />
+                            <p><%= post.user.username %></p>
+                        </div>
+                        <div class="time">
+                        <p><%= post.created_at.toLocaleString() %></p>
+                        <!-- <p>13:00</p> -->
+                        </div>
                     </div>
-                    <div class="time">
-                    <p>2023-03-01</p>
-                    <p>13:00</p>
+                    <div class="post-card__content">
+                        <h2><%= post.title %></h2>
+                        <p>
+                          <%= post.body.slice(0, 90) + '...' %>
+                        <a href="/post-detail/<%= post.id %>">See more</a>
+                        </p>
                     </div>
-                </div>
-                <div class="post-card__content">
-                    <h2>Lorem, ipsum dolor.</h2>
-                    <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste
-                    dolore quae similique ullam voluptatem enim necessitatibus
-                    praesentium ex molestias voluptatum!....
-                    <a href="/post-detail">See more</a>
-                    </p>
-                </div>
-                </div>
-                <div class="post-card">
-                <div class="post-card__heading">
-                    <div class="user">
-                        <img src="/img/default-profile-image.jpg" alt="profile-pics" />
-                        <p>Hali72</p>
                     </div>
-                    <div class="time">
-                    <p>2023-03-01</p>
-                    <p>13:00</p>
-                    </div>
-                </div>
-                <div class="post-card__content">
-                    <h2>Lorem, ipsum dolor.</h2>
-                    <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste
-                    dolore quae similique ullam voluptatem enim necessitatibus
-                    praesentium ex molestias voluptatum!....
-                    <a href="/post-detail">See more</a>
-                    </p>
-                </div>
-                </div>
-                <div class="post-card">
-                <div class="post-card__heading">
-                    <div class="user">
-                        <img src="/img/default-profile-image.jpg" alt="profile-pics" />
-                        <p>Olseun</p>
-                    </div>
-                    <div class="time">
-                    <p>2023-03-01</p>
-                    <p>13:00</p>
-                    </div>
-                </div>
-                <div class="post-card__content">
-                    <h2>Lorem, ipsum dolor.</h2>
-                    <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste
-                    dolore quae similique ullam voluptatem enim necessitatibus
-                    praesentium ex molestias voluptatum!....
-                    <a href="/post-detail">See more</a>
-                    </p>
-                </div>
-                </div>
+                <%}); %>
+                  
+                <!--PAGINATION -->
                 <div class="pagination">
-                <button class="pagination__back">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <button class="pagination__button">1</button>
-                <button class="pagination__button">2</button>
-                <button class="pagination__button active">3</button>
-                <button class="pagination__button">4</button>
-                <button class="pagination__button">5</button>
-                <button class="pagination__next">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
+                  <% if (current_page > 1) {%>
+                    <button class="pagination__back">
+                      <a href="/?page=<%= current_page - 1 %>">
+                        <i class="fa-solid fa-chevron-left"></i>
+                      </a>
+                  </button>
+                  <%}%>
+
+                  <% for (let i = 1; i <= total_pages; i++){%>
+                    <% if (i === current_page){%>
+                      <button class="pagination__button"><%= i %></button>
+                    <%}else{%>
+                      <button class="pagination__button">
+                        <a href="/?page=<%=i%>"><%= i %></a>
+                      </button>
+                    <%}%>
+
+                  <%}%>
+
+                  <% if (current_page < total_pages){%>
+
+                    <button class="pagination__next">
+                      <a href="/?page=<%= current_page + 1 %>">
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </a>
+                    </button>
+
+                  <%}%> 
+
                 </div>
+                <!-- PAGINATION -->
+
+              <%}else if (search_results.length>0){%>
+
+                <% search_results.forEach(search_result => {%>
+                  <div class="post-card">
+                    <div class="post-card__heading">
+                        <div class="user">
+                            <img src="<%= search_result.user.profile_picture %>" alt="profile-pics" />
+                            <p><%= search_result.user.username %></p>
+                        </div>
+                        <div class="time">
+                        <p><%= search_result.created_at.toLocaleString() %></p>
+                        <!-- <p>13:00</p> -->
+                        </div>
+                    </div>
+                    <div class="post-card__content">
+                        <h2><%= search_result.title %></h2>
+                        <p>
+                          <%= search_result.body.slice(0, 90) + '...' %>
+                        <a href="/post-detail/<%= search_result.id %>">See more</a>
+                        </p>
+                    </div>
+                    </div>
+                <%}); %>
+
+                  <!--PAGINATION -->
+                  <div class="pagination">
+                    <% if (current_page > 1) {%>
+                      <button class="pagination__back">
+                        <a href="/?page=<%= current_page - 1 %>">
+                          <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    </button>
+                    <%}%>
+  
+                    <% for (let i = 1; i <= total_pages; i++){%>
+                      <% if (i === current_page){%>
+                        <button class="pagination__button"><%= i %></button>
+                      <%}else{%>
+                        <button class="pagination__button">
+                          <a href="/?page=<%=i%>"><%= i %></a>
+                        </button>
+                      <%}%>
+  
+                    <%}%>
+  
+                    <% if (current_page < total_pages){%>
+  
+                      <button class="pagination__next">
+                        <a href="/?page=<%= current_page + 1 %>">
+                          <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                      </button>
+  
+                    <%}%> 
+  
+                  </div>
+                  <!-- PAGINATION -->
+
+              <%} else {%>
+                <h3>No Available Posts</h1>
+              <%}%>
+
             </div>
             <aside class="aside">
                 <div class="aside__content">

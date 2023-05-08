@@ -3,6 +3,6 @@ const { loginRequired } = require('../utility/utils');
 const postController = require('../controllers/postController');
 const router = express.Router();
 
-router.get('/post-detail', postController.PostDetailView);
+router.get('/post-detail/:id', loginRequired, postController.PostDetailView);
 
 module.exports = router;
