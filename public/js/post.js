@@ -1,5 +1,6 @@
 const title = document.querySelector("#title");
 const body = document.querySelector("#body");
+const error = document.querySelector('#error-msg');
 const create_post_form = document.querySelector('#create-post-form');
 
 

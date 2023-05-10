@@ -6,13 +6,9 @@ const { otpSchema, uuidSchema } = require('../utility/validations');
 
 setupDB();
 
-otpSchema
-
 exports.otpView = async (req, res) => {
 
     const {error, value } = uuidSchema.validate(req.params)
-
-    console.log(value)
 
     if (error){
         res.render('home', {error: error.details[0].message})
@@ -28,6 +24,7 @@ exports.otpView = async (req, res) => {
         res.redirect('/login')
         return
     }else{
+        console.log(`get: ${userExists.id}`)
         res.render("otp", {user: userExists.id});
     }
 
@@ -49,33 +46,44 @@ exports.processOTP = async (req, res) => {
     }
 
     // check if the user exists in the db
-  const userExists = await User.query().findById(value.id)
+  const userExists = await User.query().findById(value.id).first();
 
   if (!userExists){ // start if
 
       // redirect to login cause user doesn't exists
-      req.flash('error', `No such user`)
-      res.redirect('/login')
+      res.render('login', {error: 'No such user exists'})
       return
 
   } // end if
 
+  const otpExists = await User.query().where("otp", value.otp).first()
+
+  if (!otpExists){ // start if
+
+    // redirect to login cause user doesn't exists
+    // otp has expired
+    res.render('login', {error: 'Invalid OTP'})
+    return
+
+} // end if
+
   // check if the timestamp has expired
   current_timestamp = getCurrentTimestamp()
 
-  if (current_timestamp > userExists.timestampe){
+  console.log(current_timestamp.toLocaleString())
+  console.log(userExists.expiration_time.toLocaleString())
+
+  if (current_timestamp > userExists.expiration_time){
+    console.log("expired")
     // otp has expired
-      req.flash('error', `OTP has expired. Try again`)
-      res.redirect('/login')
-      return
-  } else if (userExists.is_used) {
-        // otp has been used
-        req.flash('error', `OTP has been used. Try again`)
-        res.redirect('/login')
+    res.render('login', {error: 'OTP has expired'})
+    return
+
   }else{
-    userExists.is_used = true;
+    console.log("not expired")
+    console.log(`${userExists.id}`)
+    req.flash('success', `Login Successful`)
     req.session.userId = userExists.id
-    res.redirect("/")
-  }
+    res.redirect("/")  }
 
 }

@@ -46,22 +46,17 @@ function generateOTP(){
 }
 
 function getCurrentTimestamp(){
-  current_date = new Date();
-
-  const timestamp = current_date
-
-  return timestamp
+  current_date_time = new Date();
+  return current_date_time
 }
 
 function otpTimestamp() {
 
-  // Add 30 min to current date-time
-  const expiry_time = new Date(getCurrentTimestamp() + 30 * 60000);
-
+  // Add 15 min to current date-time
+  const expiry_date_time = new Date(getCurrentTimestamp().getTime() + 15 * 60000);
   // convert to timestamp
-  const expiry_timestamp = expiry_time;
+  return expiry_date_time;
 
-  return expiry_timestamp;
 }
   
 

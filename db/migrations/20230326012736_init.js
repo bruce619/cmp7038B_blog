@@ -17,11 +17,12 @@ exports.up = function(knex) {
         table.boolean('two_fa_enabled').defaultTo(false);
         table.string('otp', 100)
         table.timestamp('expiration_time')
-        table.boolean('is_used').defaultTo(false)
         table.string('profile_picture').defaultTo('/uploads/default-profile-image.jpg');
         table.string('location', 150); // needed so others can know where the post is being made from
         table.string('bio').nullable();
         table.string('password').notNullable();
+        table.string('reset_password_token')
+        table.timestamp('reset_password_expiry_time')
         table.timestamp('created_at').defaultTo(knex.fn.now());
         table.timestamp('updated_at').defaultTo(knex.fn.now());
     })

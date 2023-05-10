@@ -456,3 +456,7 @@ header {
   color: #270;
   background-color: #DFF2BF;
 }
+
+#forgot-pass{
+  color: red;
+}

@@ -107,6 +107,25 @@ const registrationSchema = Joi.object({
 })
 
 
+const passwordResetSchema = Joi.object({
+
+  password: Joi.string()
+    .pattern(RegExp(passwordPattern))
+    .messages({
+        'string.pattern.base': 'Invalid entry. Password must cointain a minimum of 8 characters, and contain at least one capital letter, one number, and one of the special characters $, @, or #'
+    })
+    .required(),
+    confirm_password: Joi.any().equal(Joi.ref('password'))
+    .label('Confirm Password')
+    .options({ messages: { 'any.only': '{{#label}} does not match'} }),
+    token: Joi.string().min(30).max(30)
+    .pattern(RegExp(tokenPattern))
+    .messages({
+      'string.pattern.base': 'Invalid token'
+    })
+
+})
+
 const tokenSchema = Joi.object({
     token: Joi.string().min(30).max(30)
     .pattern(RegExp(tokenPattern))
@@ -209,6 +228,12 @@ id: Joi.string()
 
 })
 
+const forgotPasswordSchema = Joi.object({
+
+  email: Joi.string().email().required()
+
+})
+
 
 module.exports = {
     checkEmail,
@@ -221,5 +246,7 @@ module.exports = {
     profileSchema,
     otpSchema, 
     postSchema,
-    updatePostSchema
+    updatePostSchema,
+    forgotPasswordSchema,
+    passwordResetSchema
 }
