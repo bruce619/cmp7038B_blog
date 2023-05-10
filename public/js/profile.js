@@ -31,8 +31,8 @@ profile_picture.addEventListener("change", function(e){
     const filename = e.target.files[0].name
     profile_name.textContent = filename;
 
-    picturePattern = /\.(jpe?g|png|)$/i
-    isValidPicture = picturePattern.test(profile_picture.value)
+    const picturePattern = /\.(jpe?g|png|)$/i
+    const isValidPicture = picturePattern.test(profile_picture.value)
 
     if (!isValidPicture){
         messages.push("<i class='fa fa-times-circle'></i>Invalid File Format. Must be .jpg, jpeg, or png")
@@ -54,8 +54,8 @@ profile_form.addEventListener("submit", e => {
     }
 
     // email regex pattern
-    emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-    isValidEmail = emailPattern.test(email.value)
+    const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    const isValidEmail = emailPattern.test(email.value)
 
     // name pattern
     const namePattern = /^[a-zA-Z]+$/
@@ -67,13 +67,13 @@ profile_form.addEventListener("submit", e => {
     const isValidUsername = usernamePattern.test(username.value);
 
     // location pattern allow only alphanumeric strings at comma and space
-    locationPattern = /^[a-zA-Z0-9][a-zA-Z0-9,\s]*$/;
-    isValidLocationPattern = locationPattern.test(user_location.value)
+    const locationPattern = /^[a-zA-Z0-9][a-zA-Z0-9,\s]*$/;
+    const isValidLocationPattern = locationPattern.test(user_location.value)
 
     console.log(`Here ${bio.value}`)
     bio.value = bio.value.replace(/(<([^>]+)>)/ig, '')
-    generalTextPattern = /^[a-zA-Z0-9][a-zA-Z0-9,.!;:"?+=#@*-_\s]+$/;
-    isValidGenerateText = generalTextPattern.test(bio.value)
+    const generalTextPattern = /^[a-zA-Z0-9][a-zA-Z0-9,.!;:"?+=#@*-_\s]+$/;
+    const isValidGenerateText = generalTextPattern.test(bio.value)
 
     if (!isValidGenerateText){
         messages.push("<i class='fa fa-times-circle'></i>Invalid text.")

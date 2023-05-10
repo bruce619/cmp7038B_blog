@@ -22,6 +22,7 @@
           <div class="navbar__links">
             <ul>
               <li class="nav-link"><a href="/">Home</a></li>
+              <li class="nav-link"><a href="/post">Post</a></li>
               <li class="nav-link"><a href="/profile/<%= current_user %>">Profile</a></li>
               <li class="nav-link"><a href="/">Logout</a></li>
             </ul>
@@ -52,7 +53,7 @@
                       <p><%= post.user.username %></p>
                     </div>
                     <div class="time">
-                    <p><%= post.created_at.toLocaleString() %></p>
+                    <p><%= post.updated_at.toLocaleString() %></p>
                     </div>
                 </div>
                 <div class="post-card__content">
@@ -63,7 +64,7 @@
                     
                     <% if (current_user === post.user.id){%>
                       <div class="post-card__actions">
-                        <button class="btn btn__update">Update</button>
+                        <a href="/post/<%= post.id %>/update"><button class="btn btn__update">Update</button></a>
                         <button class="btn btn__delete" id="delete">Delete</button>
                       </div>
                     <%}%>

@@ -17,7 +17,7 @@ exports.homeView = async (req, res) => {
     const offset = (page - 1) * page_size;
     
     if (Object.keys(req.query).length === 0){
-        posts = await Post.query().withGraphFetched('user').offset(offset).limit(page_size);
+        posts = await Post.query().withGraphFetched('user').offset(offset).limit(page_size).orderBy('created_at', 'desc');
         total = await Post.query().resultSize();
         total_pages = Math.ceil(total / page_size);
         res.render('home', {
@@ -29,7 +29,7 @@ exports.homeView = async (req, res) => {
         });
         return         
     } else if (Object.keys(req.query).length === 1 && req.query.hasOwnProperty('page')){
-        posts = await Post.query().withGraphFetched('user').offset(offset).limit(page_size);
+        posts = await Post.query().withGraphFetched('user').offset(offset).limit(page_size).orderBy('created_at', 'desc');
         total = await Post.query().resultSize();
         total_pages = Math.ceil(total / page_size);
         res.render('home', {
@@ -55,7 +55,8 @@ exports.homeView = async (req, res) => {
         .limit(page_size)
         .withGraphFetched('user')
         .where('title', 'ilike', `%${value.search}%`)
-        .orWhere('body', 'ilike', `%${value.search}%`);
+        .orWhere('body', 'ilike', `%${value.search}%`)
+        .orderBy('created_at', 'desc');
 
         const total = await Post.query()
         .offset(offset)

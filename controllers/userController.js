@@ -89,6 +89,7 @@ exports.updateProfile = async (req, res) => {
       res.redirect('/login')
       return
   });
+  
   } // end if
 
   // remove the id from the object
