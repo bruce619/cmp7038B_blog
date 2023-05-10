@@ -2,7 +2,7 @@
 const {transporter, mailObject} = require('../config/email_config');
 const setupDB = require('../db/db-setup');
 const { User, UserTemp } = require('../models/user');
-const { getRandomAlphanumericString, hashPassword, comparePasswords } = require('../utility/utils');
+const { getRandomAlphanumericString, hashPassword, comparePasswords, generateOTP, otpTimestamp } = require('../utility/utils');
 const { registrationSchema, tokenSchema, loginSchema } = require('../utility/validations');
 
 setupDB();
@@ -95,6 +95,7 @@ exports.verifyEmail = async (req, res) => {
             email: verificationTokenExists.email,
             username: verificationTokenExists.username,
             password: verificationTokenExists.password,
+            is_verified: true
         }
 
         User.query()
@@ -147,10 +148,56 @@ exports.processLogin = async (req, res) => {
         return
     }
 
-    
-    req.session.userId = user.id
+    if (user.is_verified === false){
+        res.render('login', {info: 'You need to verify you account. Check the verification link in your email'})
+        return
+    }
 
-    res.redirect("/")
+    if (user.two_fa_enabled === true){
+
+        const otp = generateOTP()
+        const timestamp = otpTimestamp()
+
+        const otp_obj = {
+            otp: otp,
+            expiration_time: timestamp
+        }
+
+        user.$query()
+        .update(otp_obj)
+        .then((updatedotp)=>{
+          console.log(updatedotp)
+
+          const mailOptions = mailObject(
+            user.email,
+            "OTP",
+            `Here is your OTP: ${otp}`
+            )
+
+        transporter.sendMail(mailOptions, function(err, data) {
+            if (err) {
+              console.log("Error " + err);
+            } else {
+              console.log("OTP sent to email successfully");
+              req.flash('info', `Check your email for your OTP token`)
+              res.redirect(`/auth/otp/${user.id}`)
+            }
+          });
+
+
+        })
+        .catch((err)=>{
+          console.error(err)
+      })
+
+        
+    } else {
+        req.session.userId = user.id
+        res.redirect("/")
+    }
+
+    
+    
 }
 
 // GET: logout
@@ -165,3 +212,20 @@ exports.logout = async (req, res) => {
     });
 }
 
+// forget password page 
+exports.forgotPasswordView = async (res, req) => {
+    res.render("forgot_password", {})
+}
+
+// handles post request to send the password retrieval link
+exports.processForgotPassword = async (req, res) => {
+    res.json()
+}
+
+exports.createNewPasswordView = async (req, res) => {
+    res.render("create_password", {})
+}
+
+exports.processCreateNewPassword = async (req, res) => {
+    res.json();
+}

@@ -4,5 +4,9 @@ const postController = require('../controllers/postController');
 const router = express.Router();
 
 router.get('/post-detail/:id', loginRequired, postController.PostDetailView);
+router.get('/post', loginRequired, postController.postView);
+router.post('/post', loginRequired, postController.createPost);
+router.get('/post/:id/update', loginRequired, postController.updatePostView);
+router.post('/post/:id/update', loginRequired, postController.updatePost);
 
 module.exports = router;

@@ -32,6 +32,9 @@ const namePattern = /^[a-zA-Z]+$/
 const tokenPattern = /^[a-zA-Z0-9]+$/i
 const uuidPattern = /^[a-zA-Z0-9-]+$/i
 const searchPattern = /^[a-zA-Z0-9][a-zA-Z0-9,:.\s]*$/;
+const locationPattern = /^[a-zA-Z0-9][a-zA-Z0-9,\s]*$/;
+const picturePattern = /\.(jpe?g|png|)$/i
+const otpPattern = /^\d{6}$/
 
 
 const registrationSchema = Joi.object({
@@ -92,7 +95,7 @@ const uuidSchema = Joi.object({
 
 const searchSchema = Joi.object({
   search: Joi.string()
-    .pattern(RegExp(uuidPattern))
+    .pattern(RegExp(searchPattern))
     .min(1)
     .required()
     .messages({
@@ -102,6 +105,68 @@ const searchSchema = Joi.object({
 });
 
 
+const profileSchema = Joi.object({
+  first_name: Joi.string().min(2).max(255)
+  .pattern(RegExp(namePattern))
+  .messages({
+    'string.pattern.base': 'Invalid name entry'
+  })
+  .required(),
+  last_name: Joi.string().min(2).max(255)
+  .pattern(RegExp(namePattern))
+  .messages({
+    'string.pattern.base': 'Invalid name entry'
+  })
+  .required(),
+  email: Joi.string().email().required(),
+  username: Joi.string().alphanum().min(3).max(55).required(),
+  location: Joi.string()
+  .min(3)
+  .max(50)
+  .pattern(RegExp(locationPattern))
+  .messages({
+    'string.pattern.base': 'Invalid location entry.'
+  })
+  .required(),
+  bio: Joi.string().min(3).required(),
+  two_fa_enabled: Joi.boolean().optional(),
+  profile_picture: Joi.string()
+  .optional()
+  .pattern(RegExp(picturePattern))
+  .messages({
+    'string.pattern.base': 'Invalid picture format. Should be either jpg, jpeg, or png'
+  }),
+  id: Joi.string()
+  .pattern(RegExp(uuidPattern))
+  .required()
+  .messages({
+      'string.pattern.base': 'Invalid ID.'
+  })
+
+})
+
+
+
+const otpSchema = Joi.object({
+  otp: Joi.string()
+  .min(6)
+  .max(6)
+  .required()
+  .pattern(RegExp(otpPattern))
+  .messages({
+    'string.pattern.base': 'Invalid OTP.'
+}),
+
+id: Joi.string()
+.pattern(RegExp(uuidPattern))
+.required()
+.messages({
+    'string.pattern.base': 'Invalid ID.'
+})
+
+})
+
+
 module.exports = {
     checkEmail,
     checkImageExtension,
@@ -109,5 +174,7 @@ module.exports = {
     tokenSchema,
     loginSchema,
     uuidSchema,
-    searchSchema
+    searchSchema,
+    profileSchema,
+    otpSchema
 }

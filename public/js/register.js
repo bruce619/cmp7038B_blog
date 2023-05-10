@@ -15,6 +15,10 @@ reg_form.addEventListener("submit", e => {
 
     e.preventDefault();
 
+    // email regex pattern
+    emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    isValidEmail = emailPattern.test(email)
+
     // regexPatterns only accept letters and numbers
     const usernamePattern = /^[a-zA-Z0-9]{3,55}$/;
     const isValidUsername = usernamePattern.test(username.value);
@@ -46,8 +50,16 @@ reg_form.addEventListener("submit", e => {
         messages.push("<i class='fa fa-times-circle'></i>Invalid name entry")
     }
 
+    if (username.value.length === 0) {
+        messages.push("<i class='fa fa-times-circle'></i>Invalid. Kindly input your Username")
+    }
+
     if (!isValidUsername){
         messages.push("<i class='fa fa-times-circle'></i>Username must be between 3 and 55 characters, and can only contain alphanumeric characters");
+    }
+
+    if (!isValidEmail){
+        messages.push("<i class='fa fa-times-circle'></i> Invalid email entry")
     }
 
     if (email.value.length === 0){

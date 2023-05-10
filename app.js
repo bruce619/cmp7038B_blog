@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const config = require('./config/config');
 const bodyParser = require('body-parser');
-const store = require('./middleware/authentication_middleware');
+const {store}= require('./middleware/middleware');
 const flash = require('connect-flash');
 const crypto = require('crypto');
 const cors = require('cors')
@@ -74,6 +74,7 @@ app.use('/', require('./routes/auth'));
 app.use('/', require('./routes/user'));
 app.use('/', require('./routes/post'));
 app.use('/', require('./routes/home'));
+app.use('/', require('./routes/otp'));
 
 // Listen to port
 app.listen(port, () => console.info(`web blog app listening on port ${port}`))

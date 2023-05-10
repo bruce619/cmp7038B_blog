@@ -37,8 +37,31 @@ function loginRequired(req, res, next){
     } else {
         // User is not authenticated
         // redirect to the login page
-        res.redirect('login');
+        res.redirect('/login');
     }
+}
+
+function generateOTP(){
+  return Math.random().toString().substr(2, 6)
+}
+
+function getCurrentTimestamp(){
+  current_date = new Date();
+
+  const timestamp = current_date
+
+  return timestamp
+}
+
+function otpTimestamp() {
+
+  // Add 30 min to current date-time
+  const expiry_time = new Date(getCurrentTimestamp() + 30 * 60000);
+
+  // convert to timestamp
+  const expiry_timestamp = expiry_time;
+
+  return expiry_timestamp;
 }
   
 
@@ -46,5 +69,8 @@ module.exports = {
     hashPassword,
     comparePasswords,
     getRandomAlphanumericString,
-    loginRequired
+    loginRequired,
+    generateOTP,
+    getCurrentTimestamp,
+    otpTimestamp
 }

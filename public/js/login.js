@@ -3,8 +3,7 @@
 const email = document.querySelector('#email');
 const password = document.querySelector('#password');
 const error = document.querySelector('#error-msg');
-const login_form = document.querySelector('#login_form')
-
+const login_form = document.querySelector('#login-form')
 
 // event listener to submit form
 login_form.addEventListener("submit", e => {
@@ -21,8 +20,8 @@ login_form.addEventListener("submit", e => {
       }
 
     if (!isValidPassword){
-        // don't send any message just fail the attempt
-        messages.push('');
+        // invalid entry
+        messages.push("<i class='fa fa-times-circle'></i> Invalid Entry");
     }
 
 
