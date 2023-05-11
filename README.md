@@ -32,6 +32,8 @@ Create a .env file in the project root directory.
 In the .env file create environment variables for development and production environments like:
 
 > development environment
+- SECRET_KEY=your-aplhanumeric-secret-key
+
 > app
 - NODE_ENV=development
 - DEV_APP_PORT=3000

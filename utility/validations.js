@@ -32,6 +32,52 @@ const namePattern = /^[a-zA-Z]+$/
 const tokenPattern = /^[a-zA-Z0-9]+$/i
 const uuidPattern = /^[a-zA-Z0-9-]+$/i
 const searchPattern = /^[a-zA-Z0-9][a-zA-Z0-9,:.\s]*$/;
+const locationPattern = /^[a-zA-Z0-9][a-zA-Z0-9,\s]*$/;
+const picturePattern = /\.(jpe?g|png|)$/i
+const otpPattern = /^\d{6}$/
+const generalTextPattern = /^[a-zA-Z0-9][a-zA-Z0-9,.!;:"?+=#@*-_\s]+$/;
+
+const postSchema = Joi.object({
+  title: Joi.string().min(2).max(50).required()
+  .pattern(RegExp(searchPattern))
+    .min(1)
+    .required()
+    .messages({
+        'string.pattern.base': 'Invalid Title.'
+    }),
+  body: Joi.string().min(2)
+  .pattern(RegExp(generalTextPattern))
+    .min(1)
+    .required()
+    .messages({
+        'string.pattern.base': 'Invalid. Certain characters are not allowed'
+    })
+
+})//
+
+const updatePostSchema = Joi.object({
+  title: Joi.string().min(2).max(50).required()
+  .pattern(RegExp(searchPattern))
+    .min(1)
+    .required()
+    .messages({
+        'string.pattern.base': 'Invalid Title.'
+    }),
+  body: Joi.string().min(2)
+  .pattern(RegExp(generalTextPattern))
+    .min(1)
+    .required()
+    .messages({
+        'string.pattern.base': 'Invalid. Certain characters are not allowed'
+    }),
+    id: Joi.string()
+    .pattern(RegExp(uuidPattern))
+    .required()
+    .messages({
+        'string.pattern.base': 'Invalid ID.'
+    })
+
+})//
 
 
 const registrationSchema = Joi.object({
@@ -60,6 +106,25 @@ const registrationSchema = Joi.object({
     .options({ messages: { 'any.only': '{{#label}} does not match'} })
 })
 
+
+const passwordResetSchema = Joi.object({
+
+  password: Joi.string()
+    .pattern(RegExp(passwordPattern))
+    .messages({
+        'string.pattern.base': 'Invalid entry. Password must cointain a minimum of 8 characters, and contain at least one capital letter, one number, and one of the special characters $, @, or #'
+    })
+    .required(),
+    confirm_password: Joi.any().equal(Joi.ref('password'))
+    .label('Confirm Password')
+    .options({ messages: { 'any.only': '{{#label}} does not match'} }),
+    token: Joi.string().min(30).max(30)
+    .pattern(RegExp(tokenPattern))
+    .messages({
+      'string.pattern.base': 'Invalid token'
+    })
+
+})
 
 const tokenSchema = Joi.object({
     token: Joi.string().min(30).max(30)
@@ -92,7 +157,7 @@ const uuidSchema = Joi.object({
 
 const searchSchema = Joi.object({
   search: Joi.string()
-    .pattern(RegExp(uuidPattern))
+    .pattern(RegExp(searchPattern))
     .min(1)
     .required()
     .messages({
@@ -102,6 +167,74 @@ const searchSchema = Joi.object({
 });
 
 
+const profileSchema = Joi.object({
+  first_name: Joi.string().min(2).max(255)
+  .pattern(RegExp(namePattern))
+  .messages({
+    'string.pattern.base': 'Invalid name entry'
+  })
+  .required(),
+  last_name: Joi.string().min(2).max(255)
+  .pattern(RegExp(namePattern))
+  .messages({
+    'string.pattern.base': 'Invalid name entry'
+  })
+  .required(),
+  email: Joi.string().email().required(),
+  username: Joi.string().alphanum().min(3).max(55).required(),
+  location: Joi.string()
+  .min(3)
+  .max(50)
+  .pattern(RegExp(locationPattern))
+  .messages({
+    'string.pattern.base': 'Invalid location entry.'
+  })
+  .required(),
+  bio: Joi.string().min(3).required(),
+  two_fa_enabled: Joi.boolean().optional(),
+  profile_picture: Joi.string()
+  .optional()
+  .pattern(RegExp(picturePattern))
+  .messages({
+    'string.pattern.base': 'Invalid picture format. Should be either jpg, jpeg, or png'
+  }),
+  id: Joi.string()
+  .pattern(RegExp(uuidPattern))
+  .required()
+  .messages({
+      'string.pattern.base': 'Invalid ID.'
+  })
+
+})
+
+
+
+const otpSchema = Joi.object({
+  otp: Joi.string()
+  .min(6)
+  .max(6)
+  .required()
+  .pattern(RegExp(otpPattern))
+  .messages({
+    'string.pattern.base': 'Invalid OTP.'
+}),
+
+id: Joi.string()
+.pattern(RegExp(uuidPattern))
+.required()
+.messages({
+    'string.pattern.base': 'Invalid ID.'
+})
+
+})
+
+const forgotPasswordSchema = Joi.object({
+
+  email: Joi.string().email().required()
+
+})
+
+
 module.exports = {
     checkEmail,
     checkImageExtension,
@@ -109,5 +242,11 @@ module.exports = {
     tokenSchema,
     loginSchema,
     uuidSchema,
-    searchSchema
+    searchSchema,
+    profileSchema,
+    otpSchema, 
+    postSchema,
+    updatePostSchema,
+    forgotPasswordSchema,
+    passwordResetSchema
 }

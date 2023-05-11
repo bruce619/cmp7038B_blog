@@ -10,7 +10,6 @@
     <!-- css -->
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- js -->
-    <script src="/js/search.js" defer></script>
     <script src="/js/post_detail.js" defer></script>
   </head>
   <body>
@@ -23,7 +22,8 @@
           <div class="navbar__links">
             <ul>
               <li class="nav-link"><a href="/">Home</a></li>
-              <li class="nav-link"><a href="/profile">Profile</a></li>
+              <li class="nav-link"><a href="/post">Post</a></li>
+              <li class="nav-link"><a href="/profile/<%= current_user %>">Profile</a></li>
               <li class="nav-link"><a href="/">Logout</a></li>
             </ul>
           </div>
@@ -39,7 +39,7 @@
       </div>
       <div class="delete__popup-actions">
         <button class="btn btn__update" id="close">close</button>
-        <button class="btn btn__delete" id="confirm_delete">Delete</button>
+        <a href="/post/<%= post.id %>/delete"><button class="btn btn__delete" id="confirm_delete">Delete</button></a>
       </div>
     </div>
     <main>
@@ -53,7 +53,7 @@
                       <p><%= post.user.username %></p>
                     </div>
                     <div class="time">
-                    <p><%= post.created_at.toLocaleString() %></p>
+                    <p><%= post.updated_at.toLocaleString() %></p>
                     </div>
                 </div>
                 <div class="post-card__content">
@@ -61,22 +61,55 @@
                     <p>
                     <%= post.body %>
                     </p>
-                    <div class="post-card__actions">
-                    <button class="btn btn__update">Update</button>
-                    <button class="btn btn__delete" id="delete">Delete</button>
-                    </div>
+                    
+                    <% if (current_user === post.user.id){%>
+                      <div class="post-card__actions">
+                        <a href="/post/<%= post.id %>/update"><button class="btn btn__update">Update</button></a>
+                        <button class="btn btn__delete" id="delete">Delete</button>
+                      </div>
+                    <%}%>
                 </div>
                 </div>
+
+                <div>
+
+                  <div>
+                    <% if (error.length > 0) {%>
+                      <div id="error-msg">
+                        <i class="fa fa-times-circle"></i>
+                        <%= error %>
+                      </div>
+                    <%}else{%>
+                      <div id="error-msg"></div>
+                    <%}%>
+                  </div>
+      
+                    <% if (success.length > 0){%>
+                      <div id="success-msg">
+                        <i class="fa fa-check"></i>
+                        <%= success %>
+                      </div>
+                    <%}%>
+      
+                    <% if (info.length > 0){%>
+                      <div id="info-msg">
+                        <i class="fa fa-info-circle"></i>
+                        <%= info %>
+                      </div>
+                    <%}%>
+      
+                </div>
+
             </div>
             <aside class="aside">
                 <div class="aside__content">
                 <div class="anouncement__image">
-                  <img src="/img/image_placeholder.png" alt="announcements" />
+                  <img src="<%= post.user.profile_picture %>" alt="profile" />
                 </div>
-                <h3>Announcements</h3>
-                <p>Lorem ipsum dolor sit amet.</p>
-                <p>Lorem ipsum dolor sit amet.</p>
-                <p>Lorem ipsum dolor sit amet.</p>
+                <h3>Blogger's Info</h3>
+                <p>Name: <%= post.user.first_name %> <%= post.user.last_name %></p>
+                <p>Posting from: <%= post.user.location %></p>
+                <p>Bio: <%= post.user.bio %></p>
                 </div>
             </aside>
             </div>

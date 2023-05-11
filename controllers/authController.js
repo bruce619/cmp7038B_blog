@@ -2,14 +2,15 @@
 const {transporter, mailObject} = require('../config/email_config');
 const setupDB = require('../db/db-setup');
 const { User, UserTemp } = require('../models/user');
-const { getRandomAlphanumericString, hashPassword, comparePasswords } = require('../utility/utils');
-const { registrationSchema, tokenSchema, loginSchema } = require('../utility/validations');
+const { getRandomAlphanumericString, hashPassword, comparePasswords, generateOTP, otpTimestamp, getCurrentTimestamp } = require('../utility/utils');
+const { registrationSchema, tokenSchema, loginSchema, forgotPasswordSchema, passwordResetSchema } = require('../utility/validations');
 
 setupDB();
 
 // GET: registration view
 exports.registerationView = async (req, res) => {
-    res.render("register", {error: req.flash('error')});
+    res.render('register', {error: "", success: "", info: ""})
+    return
 }
 
 // POST: registration
@@ -41,15 +42,11 @@ exports.processRegistration = async (req, res) => {
     // remove 
     delete value.confirm_password;
 
-    // // insert user data
-    console.log(value)
-
     UserTemp.query()
     .insert(value)
     .then((newUser)=>{
 
         // Do something with the newly inserted user
-        console.log(newUser);
         const verification_link = `${req.protocol}://${req.get('host')}/verify/${newUser.token}`;
         console.log(verification_link)
         const mailOptions = mailObject(
@@ -95,6 +92,7 @@ exports.verifyEmail = async (req, res) => {
             email: verificationTokenExists.email,
             username: verificationTokenExists.username,
             password: verificationTokenExists.password,
+            is_verified: true
         }
 
         User.query()
@@ -116,7 +114,8 @@ exports.verifyEmail = async (req, res) => {
 
 // GET: login view
 exports.loginView = async (req, res) => {
-    res.render("login", {error: ''});
+    res.render('login', {error: "", success: "", info: ""})
+    return
 }
 
 // POST: login view
@@ -147,10 +146,55 @@ exports.processLogin = async (req, res) => {
         return
     }
 
-    
-    req.session.userId = user.id
+    if (user.is_verified === false){
+        res.render('login', {info: 'You need to verify you account. Check the verification link in your email'})
+        return
+    }
 
-    res.redirect("/")
+    if (user.two_fa_enabled === true){
+
+        const otp = generateOTP()
+        const timestamp_ = otpTimestamp()
+
+        const otp_obj = {
+            otp: otp,
+            expiration_time: timestamp_
+        }
+
+        user.$query()
+        .update(otp_obj)
+        .then(()=>{
+
+          const mailOptions = mailObject(
+            user.email,
+            "OTP",
+            `Here is your OTP: ${otp}`
+            )
+
+        transporter.sendMail(mailOptions, function(err, data) {
+            if (err) {
+              console.log("Error " + err);
+            } else {
+              console.log("OTP sent to email successfully");
+              req.flash('info', `Check your email for your OTP token`)
+              res.redirect(`/auth/otp/${user.id}`)
+            }
+          });
+
+
+        })
+        .catch((err)=>{
+          console.error(err)
+      })
+
+        
+    } else {
+        req.session.userId = user.id
+        res.redirect("/")
+    }
+
+    
+    
 }
 
 // GET: logout
@@ -165,3 +209,124 @@ exports.logout = async (req, res) => {
     });
 }
 
+// forget password page 
+exports.forgotPasswordView = async (req, res) => {
+    res.render('forgot_password', {error: "", success: "", info: ""})
+    return
+}
+
+// handles post request to send the password retrieval link
+exports.processForgotPassword = async (req, res) => {
+
+    const {error, value} = forgotPasswordSchema.validate(req.body);
+
+    if (error){
+        res.render('forgot_password', {error: error.details[0].message})
+        return
+    }
+
+    // check if email exists
+    const emailExists = await User.query().where("email", value.email).first();
+    
+
+    if (!emailExists){
+        res.render('forgot_password', {error: 'No user with this email exists'})
+        return
+    }
+
+    const reset_token = getRandomAlphanumericString(30)
+    const reset_token_expiry_time = otpTimestamp()
+
+    emailExists.reset_password_token = reset_token;
+    emailExists.reset_password_expiry_time = reset_token_expiry_time;
+
+    emailExists.$query().patch({
+        reset_password_token: emailExists.reset_password_token,
+        reset_password_expiry_time: emailExists.reset_password_expiry_time
+    }).then(()=>{
+        const password_reset_link = `${req.protocol}://${req.get('host')}/reset-password/${reset_token}`;
+
+        const mailOptions = mailObject(
+            emailExists.email,
+            "Password Reset Link",
+            `Click on this link to create your new password: ${password_reset_link}`
+            )
+
+        transporter.sendMail(mailOptions, function(err, data) {
+            if (err) {
+              console.log("Error " + err);
+            } else {
+              console.log("Email sent successfully");
+              res.render('forgot_password', {success: 'Success! Check Your email for reset link'})
+              return
+            }
+          });
+
+    })
+
+
+}
+
+exports.createNewPasswordView = async (req, res) => {
+
+    const {error, value} = tokenSchema.validate(req.params)
+
+    if (error){
+        res.render('forgot_password', {error: error.details[0].message})
+        return
+    }
+
+    User.query().findOne({reset_password_token: value.token})
+    .where('reset_password_expiry_time', '>', getCurrentTimestamp())
+    .then(user => {
+        if (!user){
+            res.render('forgot-password', {error: 'Token has expired or is Invalid'})
+            return
+        }
+        res.render("create_password", {reset_token: value.token, success: "", error: "", info: ""})
+    })
+    .catch((err)=>{
+        console.error(err)
+    })
+
+}
+
+exports.processCreateNewPassword = async (req, res) => {
+
+    const new_req_obj = {...req.body, ...req.params}
+
+    const {error, value} = passwordResetSchema.validate(new_req_obj)
+
+    if (error){
+        res.render('forgot_password', {error: error.details[0].message})
+        return
+    }
+
+    // delete confirm_password
+    delete value.confirm_password
+
+    value.password = hashPassword(value.password)
+
+    User.query().findOne({reset_password_token: value.token})
+    .where('reset_password_expiry_time', '>', getCurrentTimestamp())
+    .then(user => {
+        if (!user){
+            res.render('forgot-password', {error: 'Token has expired or is Invalid'})
+            return
+        }
+        
+        user.$query().patch({password: value.password})
+        .then(()=>{
+            res.render("login", {success: 'Password Reset Successful'})
+        })
+        .catch((err)=>{
+            console.error(err)
+        })
+
+    })
+    .catch((err)=>{
+        console.error(err)
+    })
+
+    
+}

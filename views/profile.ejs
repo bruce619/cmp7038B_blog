@@ -9,6 +9,8 @@
     <script src="https://kit.fontawesome.com/62765ee528.js" crossorigin="anonymous"></script>
     <!-- css -->
     <link rel="stylesheet" href="/css/styles.css" />
+    <!-- js -->
+    <script src="/js/profile.js" defer></script>
 
   </head>
   <body>
@@ -21,7 +23,8 @@
           <div class="navbar__links">
             <ul>
               <li class="nav-link"><a href="/">Home</a></li>
-              <li class="nav-link"><a href="#">Profile</a></li>
+              <li class="nav-link"><a href="/post">Post</a></li>
+              <li class="nav-link"><a href="/profile/<%= current_user %>">Profile</a></li>
               <li class="nav-link"><a href="/logout">Logout</a></li>
             </ul>
           </div>
@@ -30,40 +33,44 @@
     </header>
     <main>
       <div class="container">
+
         <div class="page-heading">
           <span class="line"></span>
           <h2>Profile</h2>
           <span class="line"></span>
         </div>
+
         <div class="signup-container">
-          <form action="/profile" method="POST" class="signup-form">
+          
+          <form action="/profile/<%= user.id %>" method="POST" id="profile-form" class="signup-form" enctype="multipart/form-data">
             <div class="user">
-              <h3>Chimuanya Ibecheozor</h3>
+              <h3><%= user.first_name %> <%= user.last_name %></h3>
               <div class="user-image">
-                <img src="/img/default-profile-image.jpg" alt="profile-pics" />
+                <img src="<%= user.profile_picture %>" alt="profile-pics" />
               </div>
               <label for="profile-image">Choose Picture</label>
+              <p id="profile-name"></p>
               <input
                 type="file"
-                name="profile-image"
+                name="profile_picture"
                 id="profile-image"
-                accept=".jpg, .png, . jpeg" />
+                accept=".jpg, .png, .jpeg"/>
             </div>
 
             <div class="formGroup">
-              <input type="emai" name="email" id="email" placeholder="email" readonly/>
+              <input type="emai" name="email" id="email" placeholder="email" value="<%= user.email %>" readonly/>
             </div>
             <div class="formGroup">
-              <input type="text" name="first_name" id="first_name" placeholder="Firstname" required/>
+              <input type="text" name="first_name" id="first_name" placeholder="Firstname" value="<%= user.first_name %>" required/>
             </div>
             <div class="formGroup">
-              <input type="text" name="last_name" id="last_name" placeholder="Lastname" required/>
+              <input type="text" name="last_name" id="last_name" placeholder="Lastname" value="<%= user.last_name %>" required/>
             </div>
             <div class="formGroup">
-              <input type="text" name="username" id="username" placeholder="Username" required/>
+              <input type="text" name="username" id="username" placeholder="Username" value="<%= user.username %>" required/>
             </div>
             <div class="formGroup">
-              <input type="text" name="location" id="location" placeholder="e.g Norwich, United Kingdom" required/>
+              <input type="text" name="location" id="location" placeholder="e.g Norwich, United Kingdom" value="<%= user.location %>" required/>
             </div>
             <div class="formGroup">
               <textarea
@@ -71,25 +78,61 @@
                 placeholder="Bio"
                 id="bio"
                 cols="30"
-                rows="10"></textarea>
+                rows="10" required><%= user.bio %></textarea>
             </div>
-            <label for="Auth" class="Auth_label">
-              <span>Activate 2 Factor Authentication</span>
-              <span class="Auth_checkbox">
-                <input type="checkbox" name="two_fa" id="Auth" />
-                <span class="switch">
-                  <span class="yes">Yes</span>
-                  <span class="no">No</span>
+            
+              <label for="Auth" class="Auth_label">
+                <span>Activate 2 Factor Authentication</span>
+                <span class="Auth_checkbox">
+                 <% if (user.two_fa_enabled){%>
+                    <input type="checkbox" name="two_fa_enabled" id="Auth" value="on" checked>
+                  <%}else{%>
+                    <input type="checkbox" name="two_fa_enabled" id="Auth" value="off" />
+                  <%}%>
+                  <span class="switch">
+                    <span class="yes">Yes</span>
+                    <span class="no">No</span>
+                  </span>
                 </span>
-              </span>
-            </label>
-            <button class="btn__signup">Update Profile</button>
+              </label>
+
+            <button type="submit" class="btn__signup">Update Profile</button>
+
           </form>
+
           <div>
-            <div id="error"></div>
+
+            <div>
+              <% if (error.length > 0) {%>
+                <div id="error-msg">
+                  <i class="fa fa-times-circle"></i>
+                  <%= error %>
+                </div>
+              <%}else{%>
+                <div id="error-msg"></div>
+              <%}%>
+            </div>
+
+              <% if (success.length > 0){%>
+                <div id="success-msg">
+                  <i class="fa fa-check"></i>
+                  <%= success %>
+                </div>
+              <%}%>
+
+              <% if (info.length > 0){%>
+                <div id="info-msg">
+                  <i class="fa fa-info-circle"></i>
+                  <%= info %>
+                </div>
+              <%}%>
+
           </div>
+
         </div>
+
       </div>
+      
     </main>
 
     <footer class="footer">

@@ -22,8 +22,8 @@
           <div class="navbar__links">
             <ul>
               <li class="nav-link"><a href="/">Home</a></li>
-              <!-- <li class="nav-link"><a href="/profile.html">Profile</a></li> -->
-              <li class="nav-link"><a href="/profile">Profile</a></li>
+              <li class="nav-link"><a href="/post">Post</a></li>
+              <li class="nav-link"><a href="/profile/<%= current_user %>">Profile</a></li>
               <li class="nav-link"><a href="/logout">Log Out</a></li>
             </ul>
           </div>
@@ -35,7 +35,7 @@
             <div class="searchbar-container">
                 <div class="searchbar">
                     <form action="/" method="GET" id="search_form">
-                        <input type="text" id="search" name="search" placeholder="Search for post" />
+                        <input type="text" id="search" name="search" placeholder="Search for post" required/>
                         <button type="submit">Search</button>
                     </form>
                 </div>
@@ -74,7 +74,7 @@
                             <p><%= post.user.username %></p>
                         </div>
                         <div class="time">
-                        <p><%= post.created_at.toLocaleString() %></p>
+                        <p><%= post.updated_at.toLocaleString() %></p>
                         <!-- <p>13:00</p> -->
                         </div>
                     </div>
@@ -188,11 +188,11 @@
             <aside class="aside">
                 <div class="aside__content">
                 <div class="anouncement__image">
-                    <img src="/img/image_placeholder.png" alt="announcements" />
+                    <img src="/img/announcement.jpg" alt="announcements" />
                 </div>
                 <h3>Announcements</h3>
-                <p>Lorem ipsum dolor sit amet.</p>
-                <p>Lorem ipsum dolor sit amet.</p>
+                <p>This blog is free for all to use.</p>
+                <p>Respect everyone.</p>
                 <p>Lorem ipsum dolor sit amet.</p>
                 </div>
             </aside>
