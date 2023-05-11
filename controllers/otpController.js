@@ -20,11 +20,9 @@ exports.otpView = async (req, res) => {
     if (!userExists){ // start if
   
         // redirect to login cause user doesn't exists
-        req.flash('error', `No such user`)
-        res.redirect('/login')
+        res.render('login', {error: 'No such user'})
         return
     }else{
-        console.log(`get: ${userExists.id}`)
         res.render("otp", {user: userExists.id});
     }
 
@@ -35,8 +33,6 @@ exports.otpView = async (req, res) => {
 exports.processOTP = async (req, res) => {
 
     const new_req_obj = {...req.body, ...req.params}
-
-    console.log(new_req_obj)
 
     const {error, value} = otpSchema.validate(new_req_obj)
        
@@ -70,9 +66,6 @@ exports.processOTP = async (req, res) => {
   // check if the timestamp has expired
   current_timestamp = getCurrentTimestamp()
 
-  console.log(current_timestamp.toLocaleString())
-  console.log(userExists.expiration_time.toLocaleString())
-
   if (current_timestamp > userExists.expiration_time){
     console.log("expired")
     // otp has expired
@@ -80,8 +73,6 @@ exports.processOTP = async (req, res) => {
     return
 
   }else{
-    console.log("not expired")
-    console.log(`${userExists.id}`)
     req.flash('success', `Login Successful`)
     req.session.userId = userExists.id
     res.redirect("/")  }

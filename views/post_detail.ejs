@@ -39,7 +39,7 @@
       </div>
       <div class="delete__popup-actions">
         <button class="btn btn__update" id="close">close</button>
-        <button class="btn btn__delete" id="confirm_delete">Delete</button>
+        <a href="/post/<%= post.id %>/delete"><button class="btn btn__delete" id="confirm_delete">Delete</button></a>
       </div>
     </div>
     <main>
@@ -70,6 +70,36 @@
                     <%}%>
                 </div>
                 </div>
+
+                <div>
+
+                  <div>
+                    <% if (error.length > 0) {%>
+                      <div id="error-msg">
+                        <i class="fa fa-times-circle"></i>
+                        <%= error %>
+                      </div>
+                    <%}else{%>
+                      <div id="error-msg"></div>
+                    <%}%>
+                  </div>
+      
+                    <% if (success.length > 0){%>
+                      <div id="success-msg">
+                        <i class="fa fa-check"></i>
+                        <%= success %>
+                      </div>
+                    <%}%>
+      
+                    <% if (info.length > 0){%>
+                      <div id="info-msg">
+                        <i class="fa fa-info-circle"></i>
+                        <%= info %>
+                      </div>
+                    <%}%>
+      
+                </div>
+
             </div>
             <aside class="aside">
                 <div class="aside__content">

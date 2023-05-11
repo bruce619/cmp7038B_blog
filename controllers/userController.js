@@ -47,8 +47,6 @@ exports.updateProfile = async (req, res) => {
 
   const new_req_obj = {...req.body, ...req.params}
 
-  console.log(new_req_obj)
-
   const {error, value} = profileSchema.validate(new_req_obj)
 
   if (error){
@@ -97,8 +95,7 @@ exports.updateProfile = async (req, res) => {
 
   userExists.$query()
   .update(value)
-  .then((updatedProfile)=>{
-    console.log(updatedProfile)
+  .then(()=>{
     req.flash('success', `Updated Account Successfully`)
     res.redirect(`/profile/${user}`)
   })

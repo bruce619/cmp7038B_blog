@@ -65,12 +65,9 @@ exports.createPost = async (req, res) => {
         // insert the user id in the object
         value.author = user_id
 
-        console.log(value)
-
         Post.query()
         .insert(value)
         .then((post)=>{
-            console.log(post)
             req.flash('success', `Successfully created Post!`)
             res.redirect('/')
         })
@@ -107,8 +104,6 @@ exports.updatePost = async (req, res) => {
 
     const new_req_obj = {...req.body, ...req.params}
 
-    console.log(new_req_obj)
-
     const {error, value} = updatePostSchema.validate(new_req_obj)
 
     if (error){
@@ -117,8 +112,6 @@ exports.updatePost = async (req, res) => {
     }
 
     const postExists = await Post.query().findById(value.id).withGraphFetched('user').first();
-
-    console.log(postExists)
 
     if (!postExists){
         req.flash('error', `No such post`)
@@ -134,22 +127,42 @@ exports.updatePost = async (req, res) => {
         return
     }
 
-
+    const post_id = value.id
     
     // remove id from object
     delete value.id
 
     postExists.$query()
-    .update(value)
-    .then((updatedPost)=>{
-        console.log(updatedPost)
+    .patch(value)
+    .then(()=>{
         req.flash('success', `Successfully updated post`)
-        res.redirect("/")
+        res.redirect(`/post-detail/${post_id}`)
     })
     .catch((err)=>{
         console.error(err)
     })
 
 
+
+}
+
+
+exports.deletePost = async (req, res) =>{
+    
+    const {error, value} = uuidSchema.validate(req.params);
+
+    current_user = req.session.userId
+
+    Post.query()
+    .where('id', value.id)
+    .andWhere('author', current_user)
+    .delete()
+    .then(()=>{
+        req.flash('success', `Successfully deleted post`)
+        res.redirect("/")
+    })
+    .catch((err)=>{
+        console.error(err)
+    })
 
 }

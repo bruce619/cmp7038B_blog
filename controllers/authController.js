@@ -42,15 +42,11 @@ exports.processRegistration = async (req, res) => {
     // remove 
     delete value.confirm_password;
 
-    // // insert user data
-    console.log(value)
-
     UserTemp.query()
     .insert(value)
     .then((newUser)=>{
 
         // Do something with the newly inserted user
-        console.log(newUser);
         const verification_link = `${req.protocol}://${req.get('host')}/verify/${newUser.token}`;
         console.log(verification_link)
         const mailOptions = mailObject(
@@ -250,9 +246,6 @@ exports.processForgotPassword = async (req, res) => {
     }).then(()=>{
         const password_reset_link = `${req.protocol}://${req.get('host')}/reset-password/${reset_token}`;
 
-
-        console.log(password_reset_link)
-
         const mailOptions = mailObject(
             emailExists.email,
             "Password Reset Link",
@@ -308,8 +301,6 @@ exports.processCreateNewPassword = async (req, res) => {
         res.render('forgot_password', {error: error.details[0].message})
         return
     }
-
-    console.log(value)
 
     // delete confirm_password
     delete value.confirm_password
