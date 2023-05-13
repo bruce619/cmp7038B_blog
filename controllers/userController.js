@@ -17,7 +17,15 @@ exports.profileView = async (req, res) => {
   User.query()
   .findById(value.id)
   .then((user)=>{
+    
     const current_user = req.session.userId;
+
+    if (current_user !== value.id){
+      req.flash('error', `Permission Denied. You are not the user`)
+      res.redirect("/")
+      return
+  }
+
     res.render('profile', {user: user, current_user: current_user});
   })
   .catch((err)=>{

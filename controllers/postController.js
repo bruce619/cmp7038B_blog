@@ -88,14 +88,20 @@ exports.updatePostView = async (req, res) => {
         return
     }
 
-    const postExists = await Post.query().findById(value.id).first();
+    const postExists = await Post.query().withGraphFetched('user').findById(value.id).first();
 
     if (!postExists){
         res.render('home', {error: "Post does not exists"})
         return
     }
 
-    current_user = req.session.userId
+    const current_user = req.session.userId
+
+    if (current_user !== postExists.user.id){
+        req.flash('error', `Permission Denied. You are not the user`)
+        res.redirect("/")
+        return
+    }
 
     res.render("update_post", {title: postExists.title, body: postExists.body, current_user: current_user, post_id: value.id})
 }
@@ -151,8 +157,22 @@ exports.deletePost = async (req, res) =>{
     
     const {error, value} = uuidSchema.validate(req.params);
 
-    current_user = req.session.userId
+    const postExists = await Post.query().findById(value.id).withGraphFetched('user').first();
 
+    if (!postExists){
+        req.flash('error', `No such post`)
+        res.redirect("/")
+        return
+    }
+
+    const current_user = req.session.userId
+
+    if (current_user !== postExists.user.id){
+        req.flash('error', `Permission Denied. You are not the user`)
+        res.redirect("/")
+        return
+    }
+    
     Post.query()
     .where('id', value.id)
     .andWhere('author', current_user)
