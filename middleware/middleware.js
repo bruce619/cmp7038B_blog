@@ -1,28 +1,28 @@
 const session = require('express-session');
 const Redis = require('ioredis');
 const RedisStore = require('connect-redis')(session);
-const multer = require('multer');
 
 // redis store middleware
 const redisClient = new Redis();
 
 const store = new RedisStore({client: redisClient});
 
-// multer for upload middleware
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads');
-    },
-    filename: (req, file, cb) => {
-        const unique_suffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname + '-' + unique_suffix + '.' + file.originalname.split('.').pop());
+function loginRequired(req, res, next){
+    if (req.session && req.session.userId) {
+        // User is authenticated, proceed with the next
+
+        // regenerate csrf token
+        res.locals.csrfToken = req.csrfToken()
+
+        return next();
+    } else {
+        // User is not authenticated
+        // redirect to the login page
+        res.status(401).redirect('/login');
     }
-});
-
-
-const file_upload = multer({storage: storage});
+}
 
 module.exports = {
     store,
-    file_upload
+    loginRequired
 }

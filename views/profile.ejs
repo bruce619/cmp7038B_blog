@@ -43,6 +43,7 @@
         <div class="signup-container">
           
           <form action="/profile/<%= user.id %>" method="POST" id="profile-form" class="signup-form" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
             <div class="user">
               <h3><%= user.first_name %> <%= user.last_name %></h3>
               <div class="user-image">

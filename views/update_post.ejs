@@ -47,6 +47,7 @@
             <div class="formGroup">
               <textarea class="form-control" name="body" id="body" cols="30" rows="10" placeholder="Update Post" required><%= body %></textarea>
             </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button class="btn__signup justify-content-end">Update Post</button>
           </form>
           

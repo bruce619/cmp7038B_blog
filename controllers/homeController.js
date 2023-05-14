@@ -20,7 +20,8 @@ exports.homeView = async (req, res) => {
         posts = await Post.query().withGraphFetched('user').offset(offset).limit(page_size).orderBy('created_at', 'desc');
         total = await Post.query().resultSize();
         total_pages = Math.ceil(total / page_size);
-        res.render('home', {
+
+        res.status(200).render('home', {
             posts: posts, 
             search_results: '', 
             total_pages: total_pages,
@@ -32,7 +33,8 @@ exports.homeView = async (req, res) => {
         posts = await Post.query().withGraphFetched('user').offset(offset).limit(page_size).orderBy('created_at', 'desc');
         total = await Post.query().resultSize();
         total_pages = Math.ceil(total / page_size);
-        res.render('home', {
+
+        res.status(200).render('home', {
             posts: posts, 
             search_results: '', 
             total_pages: total_pages,
@@ -46,7 +48,7 @@ exports.homeView = async (req, res) => {
 
         // check if error exists in user input
         if (error){
-            res.render('home', {error: error.details[0].message})
+            res.status(400).render('home', {error: error.details[0].message})
             return
         }
 
@@ -67,8 +69,7 @@ exports.homeView = async (req, res) => {
 
         total_pages = Math.ceil(total / page_size);
 
-        // console.log(search_results)
-        res.render('home', {
+        res.status(200).render('home', {
             search_results: search_results, 
             posts: '', 
             current_page: page, 

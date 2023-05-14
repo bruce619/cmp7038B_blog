@@ -9,12 +9,18 @@ setupDB();
 
 // GET: registration view
 exports.registerationView = async (req, res) => {
-    res.render('register', {error: "", success: "", info: ""})
+    console.log('========GET REQUEST=========')
+    console.log(req.csrfToken())
+    res.status(200).render('register', {error: "", success: "", info: ""})
     return
 }
 
 // POST: registration
 exports.processRegistration = async (req, res) => {
+
+    console.log('========POST REQUEST=========')
+    console.log(req.body._csrf)
+    delete req.body._csrf
 
     // validate req.body data using the joi validation defined in the model
 
@@ -22,14 +28,14 @@ exports.processRegistration = async (req, res) => {
 
     // check if error exists in user input
     if (error){
-        res.render('register', {error: error.details[0].message})
+        res.status(400).render('register', {error: error.details[0].message})
         return
     }
 
     // check if user exists
     const userExist = await UserTemp.query().where('email', value.email).first();
     if (userExist){
-        res.render('register', {error: "User already exists"})
+        res.status(401).render('register', {error: "User already exists"})
         return
     }    
 
@@ -62,7 +68,7 @@ exports.processRegistration = async (req, res) => {
               console.log("Email sent successfully");
               req.flash('success', 'Sucessful! A verification link has been sent to your email.')
               req.flash('info', 'Complete Your registration by verifying your email.')
-              res.redirect('/login')
+              res.status(201).redirect('/login')
             }
           });
 
@@ -79,7 +85,7 @@ exports.verifyEmail = async (req, res) => {
     const {error, value } = tokenSchema.validate(req.params)
 
     if (error){
-        res.render('login', {error: error.details[0].message})
+        res.status(400).render('login', {error: error.details[0].message})
         return
     }
 
@@ -100,32 +106,38 @@ exports.verifyEmail = async (req, res) => {
         .then((newUser)=>{
             req.session.userId = newUser.id
             req.flash('success', `${newUser.first_name}, You have successfully verified your email!`)
-            res.redirect('/')
+            res.status(201).redirect('/')
             return
         })
         .catch((err)=>{
         console.error(err)
     })
     } else {
-        res.render('login', {error: "Invalid verification link token"})
+        res.status(401).render('login', {error: "Invalid verification link token"})
     }
 
 }
 
 // GET: login view
 exports.loginView = async (req, res) => {
-    res.render('login', {error: "", success: "", info: ""})
+    console.log('========GET REQUEST=========')
+    console.log(req.csrfToken())
+    res.status(200).render('login', {error: "", success: "", info: ""})
     return
 }
 
 // POST: login view
 exports.processLogin = async (req, res) => {
 
+    console.log('========POST REQUEST=========')
+    console.log(req.body._csrf)
+    delete req.body._csrf
+
     // validate login form data
     const {error, value} = loginSchema.validate(req.body)
 
     if (error){
-        res.render('login', {error: error.details[0].message})
+        res.status(400).render('login', {error: error.details[0].message})
         return
     }
 
@@ -133,7 +145,7 @@ exports.processLogin = async (req, res) => {
     const user = await User.query().where('email', value.email).first();
     // if user doesn't exists return invalid or email
     if (!user){
-        res.render('login', {error: "Invalid Email or Password"})
+        res.status(404).render('login', {error: "Invalid Email or Password"})
         return
     }
 
@@ -142,12 +154,12 @@ exports.processLogin = async (req, res) => {
 
     // if it doesn't match return invalid email or password message
     if (!passwordExists){
-        res.render('login', {error: "Invalid Email or Password"})
+        res.status(404).render('login', {error: "Invalid Email or Password"})
         return
     }
 
     if (user.is_verified === false){
-        res.render('login', {info: 'You need to verify you account. Check the verification link in your email'})
+        res.status(401).render('login', {info: 'You need to verify you account. Check the verification link in your email'})
         return
     }
 
@@ -177,7 +189,7 @@ exports.processLogin = async (req, res) => {
             } else {
               console.log("OTP sent to email successfully");
               req.flash('info', `Check your email for your OTP token`)
-              res.redirect(`/auth/otp/${user.id}`)
+              res.status(200).redirect(`/auth/otp/${user.id}`)
             }
           });
 
@@ -190,7 +202,7 @@ exports.processLogin = async (req, res) => {
         
     } else {
         req.session.userId = user.id
-        res.redirect("/")
+        res.status(200).redirect("/")
     }
 
     
@@ -204,24 +216,33 @@ exports.logout = async (req, res) => {
         if (err){
             return console.log(`Error ${err}`);
         }
-        // redirect to login
-        res.redirect('/login')
+        
+        // redirect to login and prevent going back to authenticated page
+        res.set('cache-control', 'no-cache, no-store, must-revalidate')
+        res.set('pragma', 'no-cache')
+        res.status(200).redirect('/login')
     });
 }
 
 // forget password page 
 exports.forgotPasswordView = async (req, res) => {
-    res.render('forgot_password', {error: "", success: "", info: ""})
+    console.log('========GET REQUEST=========')
+    console.log(req.csrfToken())
+    res.status(200).render('forgot_password', {error: "", success: "", info: ""})
     return
 }
 
 // handles post request to send the password retrieval link
 exports.processForgotPassword = async (req, res) => {
 
+    const _csrf = req.body._csrf
+    console.log(_csrf)
+    delete req.body._csrf
+
     const {error, value} = forgotPasswordSchema.validate(req.body);
 
     if (error){
-        res.render('forgot_password', {error: error.details[0].message})
+        res.status(400).render('forgot_password', {error: error.details[0].message})
         return
     }
 
@@ -230,7 +251,7 @@ exports.processForgotPassword = async (req, res) => {
     
 
     if (!emailExists){
-        res.render('forgot_password', {error: 'No user with this email exists'})
+        res.status(404).render('forgot_password', {error: 'No user with this email exists'})
         return
     }
 
@@ -244,12 +265,13 @@ exports.processForgotPassword = async (req, res) => {
         reset_password_token: emailExists.reset_password_token,
         reset_password_expiry_time: emailExists.reset_password_expiry_time
     }).then(()=>{
-        const password_reset_link = `${req.protocol}://${req.get('host')}/reset-password/${reset_token}`;
+
+        const password_reset_link = `${req.protocol}://${req.get('host')}/reset-password/${reset_token}/`;
 
         const mailOptions = mailObject(
             emailExists.email,
             "Password Reset Link",
-            `Click on this link to create your new password: ${password_reset_link}`
+            `Click on this link to create your new password: ${password_reset_link}`,
             )
 
         transporter.sendMail(mailOptions, function(err, data) {
@@ -257,22 +279,26 @@ exports.processForgotPassword = async (req, res) => {
               console.log("Error " + err);
             } else {
               console.log("Email sent successfully");
-              res.render('forgot_password', {success: 'Success! Check Your email for reset link'})
-              return
+              req.flash('success', 'Email sent successfully')
+              res.status(200).render("login", {success: 'Password Reset Successful', csrfToken: req.csrfToken()})
             }
           });
 
+    })
+    .catch((err)=>{
+        console.error(err)
     })
 
 
 }
 
 exports.createNewPasswordView = async (req, res) => {
-
+    console.log('========GET REQUEST=========')
+    console.log(req.csrfToken())
     const {error, value} = tokenSchema.validate(req.params)
 
     if (error){
-        res.render('forgot_password', {error: error.details[0].message})
+        res.status(400).render('forgot_password', {error: error.details[0].message})
         return
     }
 
@@ -280,10 +306,10 @@ exports.createNewPasswordView = async (req, res) => {
     .where('reset_password_expiry_time', '>', getCurrentTimestamp())
     .then(user => {
         if (!user){
-            res.render('forgot-password', {error: 'Token has expired or is Invalid'})
+            res.status(401).render('forgot-password', {error: 'Token has expired or is Invalid'})
             return
         }
-        res.render("create_password", {reset_token: value.token, success: "", error: "", info: ""})
+        res.status(200).render("create_password", {reset_token: value.token, success: "", error: "", info: ""})
     })
     .catch((err)=>{
         console.error(err)
@@ -293,12 +319,16 @@ exports.createNewPasswordView = async (req, res) => {
 
 exports.processCreateNewPassword = async (req, res) => {
 
+    console.log('========POST REQUEST=========')
+    console.log(req.body._csrf)
+    delete req.body._csrf
+
     const new_req_obj = {...req.body, ...req.params}
 
     const {error, value} = passwordResetSchema.validate(new_req_obj)
 
     if (error){
-        res.render('forgot_password', {error: error.details[0].message})
+        res.status(400).render('forgot_password', {error: error.details[0].message})
         return
     }
 
@@ -311,13 +341,13 @@ exports.processCreateNewPassword = async (req, res) => {
     .where('reset_password_expiry_time', '>', getCurrentTimestamp())
     .then(user => {
         if (!user){
-            res.render('forgot-password', {error: 'Token has expired or is Invalid'})
+            res.status(401).render('forgot-password', {error: 'Token has expired or is Invalid'})
             return
         }
         
         user.$query().patch({password: value.password})
         .then(()=>{
-            res.render("login", {success: 'Password Reset Successful'})
+            res.status(200).render("login", {success: 'Password Reset Successful', csrfToken: req.csrfToken()})
         })
         .catch((err)=>{
             console.error(err)

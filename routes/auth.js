@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router();
 const authController = require('../controllers/authController');
 
-router.get('/register', authController.registerationView);
+router.get('/register',  authController.registerationView);
 router.post('/register', authController.processRegistration);
 router.get('/verify/:token', authController.verifyEmail);
 router.get('/login', authController.loginView);

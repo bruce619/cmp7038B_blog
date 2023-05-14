@@ -56,6 +56,7 @@ const postSchema = Joi.object({
 })//
 
 const updatePostSchema = Joi.object({
+  _csrf: Joi.string(),
   title: Joi.string().min(2).max(50).required()
   .pattern(RegExp(searchPattern))
     .min(1)
@@ -108,7 +109,6 @@ const registrationSchema = Joi.object({
 
 
 const passwordResetSchema = Joi.object({
-
   password: Joi.string()
     .pattern(RegExp(passwordPattern))
     .messages({
@@ -229,9 +229,7 @@ id: Joi.string()
 })
 
 const forgotPasswordSchema = Joi.object({
-
   email: Joi.string().email().required()
-
 })
 
 

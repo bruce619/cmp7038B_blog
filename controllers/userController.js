@@ -7,10 +7,13 @@ setupDB();
 
 exports.profileView = async (req, res) => {
 
+  console.log('========GET REQUEST=========')
+  console.log(req.csrfToken())
+
   const {error, value } = uuidSchema.validate(req.params)
 
   if (error){
-      res.render('home', {error: error.details[0].message})
+      res.status(400).render('home', {error: error.details[0].message})
       return
   }
 
@@ -22,11 +25,11 @@ exports.profileView = async (req, res) => {
 
     if (current_user !== value.id){
       req.flash('error', `Permission Denied. You are not the user`)
-      res.redirect("/")
+      res.status(403).redirect("/")
       return
   }
 
-    res.render('profile', {user: user, current_user: current_user});
+    res.status(200).render('profile', {user: user, current_user: current_user, csrfToken: req.csrfToken()});
   })
   .catch((err)=>{
     console.error(err)
@@ -36,29 +39,33 @@ exports.profileView = async (req, res) => {
 
 
 exports.updateProfile = async (req, res) => {
-  if (!('two_fa_enabled' in req.body)){
-    req.body.two_fa_enabled = false;
-  }else{
-    req.body.two_fa_enabled = Boolean(req.body.two_fa_enabled)
-  }
+
   if (req.file === undefined){
     req.file = {}
   }
 
   if ('filename' in req.file){
-
     const profile_picture = '/' + 'uploads' + '/' + req.file.filename
-    
     req.body.profile_picture = profile_picture
-
   }
+
+  if (!('two_fa_enabled' in req.body)){
+    req.body.two_fa_enabled = false;
+  }else{
+    req.body.two_fa_enabled = Boolean(req.body.two_fa_enabled)
+  }
+  
+
+  console.log('========POST REQUEST=========')
+  console.log(req.body._csrf)
+  delete req.body._csrf
 
   const new_req_obj = {...req.body, ...req.params}
 
   const {error, value} = profileSchema.validate(new_req_obj)
 
   if (error){
-      res.render('login', {error: error.details[0].message})
+      res.status(400).render('login', {error: error.details[0].message})
       return
   }
 
@@ -74,7 +81,7 @@ exports.updateProfile = async (req, res) => {
       }
       // redirect to login
       req.flash('error', `Permission Denied`)
-      res.redirect('/login')
+      res.status(403).redirect('/login')
       return
   });
 
@@ -92,7 +99,7 @@ exports.updateProfile = async (req, res) => {
       }
       // redirect to login
       req.flash('error', `No such user`)
-      res.redirect('/login')
+      res.status(404).redirect('/login')
       return
   });
   
@@ -105,7 +112,7 @@ exports.updateProfile = async (req, res) => {
   .update(value)
   .then(()=>{
     req.flash('success', `Updated Account Successfully`)
-    res.redirect(`/profile/${user}`)
+    res.status(200).redirect('/')
   })
   .catch((err)=>{
     console.error(err)
