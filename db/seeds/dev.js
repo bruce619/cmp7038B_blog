@@ -8,7 +8,7 @@ const { checkEmail } = require("../../utility/validations");
 
 exports.seed = async function(knex) {
   // truncate existing tables
-  await knex.raw('TRUNCATE TABLE "posts" CASCADE');
+  // await knex.raw('TRUNCATE TABLE "posts" CASCADE');
   // await knex.raw('TRUNCATE TABLE "users" CASCADE');
   // await knex.raw('TRUNCATE TABLE "user_temp" CASCADE');
 
@@ -66,22 +66,22 @@ exports.seed = async function(knex) {
 
   return knex('posts').insert([
     {
-      author: '58e5a9e2-d6a2-4a92-a272-f43413b2ffeb',
+      author: "c77df081-7074-44e2-9bc8-c43a238c5644",
       body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut lectus vitae odio dignissim volutpat. Sed porttitor ut quam quis lobortis.',
       title: 'Chimuanya Test post title 1'
     },
     {
-      author: '8300f2ee-d571-4654-9ef3-3776d9802953',
+      author: "5aecc2e4-7adf-42ae-a365-48f32f45e6db",
       body: 'Maecenas at est malesuada, dapibus arcu vitae, bibendum quam. Nullam sed enim ut sapien mollis iaculis vel vel nisl. Nam porttitor tortor a ex placerat, ut interdum tellus pretium.',
       title: 'Test data title 2 by Seun'
     },
     {
-      author: '2d9fe0ab-6b92-4ad6-8d24-fa5f26ccad08',
+      author: "c91d4cf0-4a94-489a-a37c-703777a7b8a5",
       body: 'Vivamus non augue ac dolor efficitur consequat. Duis id augue eleifend, malesuada libero sit amet, tempor turpis. Curabitur vel elit ac turpis iaculis iaculis id id augue. ',
       title: 'Test data title 3 by Halima' 
     },
     {
-      author: '58e5a9e2-d6a2-4a92-a272-f43413b2ffeb',
+      author: "c77df081-7074-44e2-9bc8-c43a238c5644",
       body: 'Fusce sem metus, facilisis vel imperdiet vel, pulvinar in ipsum. Phasellus rutrum purus nulla, at feugiat ipsum lacinia ut. Aliquam dictum suscipit justo, id tincidunt massa congue quis.',
       title: 'Test data title 5 by Chimuanya'
     }
