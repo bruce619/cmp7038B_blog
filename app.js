@@ -160,3 +160,6 @@ app.use('/', require('./routes/otp'));
 
 // Listen to port
 app.listen(port, () => console.info(`web blog app listening on port ${port}`))
+
+
+module.exports.server = app;
