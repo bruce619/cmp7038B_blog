@@ -42,10 +42,22 @@
         <div class="signup-container">
           <form action="/post" method="POST" id="create-post-form" class="signup-form">
             <div class="formGroup">
-              <input type="text" name="title" id="title" placeholder="Post Title" required/>
+              <input 
+              type="text" 
+              name="title" 
+              id="title" 
+              placeholder="Post Title: only accept aplhanumeric characters and comma, period, colon, and space" 
+              required/>
             </div>
             <div class="formGroup">
-              <textarea class="form-control" name="body" cols="30" rows="10" id="body" placeholder="New Post" required></textarea>
+              <textarea 
+              class="form-control" 
+              name="body" 
+              cols="30" 
+              rows="10" 
+              id="body" 
+              placeholder="Post: only accept aplhanumeric characters and non-alphanumeric characters excluding < > ~ | \ / ) ( ^ $ [ ] { }" 
+              required></textarea>
             </div>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button class="btn__signup justify-content-end">Post</button>

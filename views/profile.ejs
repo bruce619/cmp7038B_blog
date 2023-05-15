@@ -76,10 +76,11 @@
             <div class="formGroup">
               <textarea
                 name="bio"
-                placeholder="Bio"
+                placeholder="Bio: only accept aplhanumeric characters and non-alphanumeric characters excluding < > ~ | \ / ) ( ^ $ [ ] { }"
                 id="bio"
                 cols="30"
-                rows="10" required><%= user.bio %></textarea>
+                rows="10"
+                required><%= user.bio %></textarea>
             </div>
             
               <label for="Auth" class="Auth_label">

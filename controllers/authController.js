@@ -10,8 +10,8 @@ setupDB();
 // GET: registration view
 exports.registerationView = async (req, res) => {
     console.log('========GET REQUEST=========')
-    console.log(req.csrfToken())
-    res.status(200).render('register', {error: "", success: "", info: ""})
+    // console.log(req.csrfToken())
+    res.status(200).render('register', {error: "", success: "", info: "", csrfToken: req.csrfToken()})
     return
 }
 

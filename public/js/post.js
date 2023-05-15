@@ -15,6 +15,7 @@ create_post_form.addEventListener("submit", e => {
     const isValidTitle = titlePattern.test(title.value);
 
     body.value = body.value.replace(/(<([^>]+)>)/ig, '')
+    // regexPatterns only accept aplhanumeric characters with comma, period, exclamation, colon, and space etc
     const generalTextPattern = /^[a-zA-Z0-9][a-zA-Z0-9,.!;:"?+=#@*-_\s]+$/;
     const isValidGenerateText = generalTextPattern.test(body.value)
 
