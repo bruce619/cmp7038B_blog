@@ -15,9 +15,9 @@ reg_form.addEventListener("submit", e => {
 
     e.preventDefault();
 
-    // email regex pattern
-    emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-    isValidEmail = emailPattern.test(email)
+    // // email regex pattern
+    // const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    // const isValidEmail = emailPattern.test(email)
 
     // regexPatterns only accept letters and numbers
     const usernamePattern = /^[a-zA-Z0-9]{3,55}$/;
@@ -39,7 +39,7 @@ reg_form.addEventListener("submit", e => {
     }
 
     if (!isValidFirstName){
-        messages.push("<i class='fa fa-times-circle'></i>Invalid name entry")
+        messages.push("<i class='fa fa-times-circle'></i>Invalid first name entry")
     }
 
     if (last_name.value.length === 0) {
@@ -47,7 +47,7 @@ reg_form.addEventListener("submit", e => {
     }
 
     if (!isValidLastName){
-        messages.push("<i class='fa fa-times-circle'></i>Invalid name entry")
+        messages.push("<i class='fa fa-times-circle'></i>Invalid last name entry")
     }
 
     if (username.value.length === 0) {
@@ -58,9 +58,9 @@ reg_form.addEventListener("submit", e => {
         messages.push("<i class='fa fa-times-circle'></i>Username must be between 3 and 55 characters, and can only contain alphanumeric characters");
     }
 
-    if (!isValidEmail){
-        messages.push("<i class='fa fa-times-circle'></i> Invalid email entry")
-    }
+    // if (!isValidEmail){
+    //     messages.push("<i class='fa fa-times-circle'></i> Invalid email entry")
+    // }
 
     if (email.value.length === 0){
         messages.push("<i class='fa fa-times-circle'></i>Invalid entry. Must have an email")

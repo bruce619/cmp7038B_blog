@@ -39,23 +39,44 @@
         <div class="signup-container">
           <form action="/register" method="POST" id="reg_form" class="signup-form">
             <div class="formGroup">
-              <input type="text" name="first_name" id="first_name" placeholder="Firstname" required/>
-            </div>
+              <input type="text" 
+              name="first_name" 
+              id="first_name" 
+              placeholder="Firstname: must be only contain letters of the alphabets" 
+              required/>
+            </div>              
             <div class="formGroup">
-              <input type="text" name="last_name" id="last_name" placeholder="Lastname" required/>
+              <input 
+              type="text" 
+              name="last_name" 
+              id="last_name" 
+              placeholder="Lastname: must be only contain letters of the alphabets" 
+              required/>
             </div>
+
             <div class="formGroup">
-              <input type="text" name="username" id="username" placeholder="Username" required/>
+              <input 
+              type="text" 
+              name="username" 
+              id="username" 
+              placeholder="Username: must be between 3 and 55 characters, and can only contain alphanumeric characters" 
+              required/>
             </div>
             <div class="formGroup">
               <input type="emai" name="email" id="email" placeholder="email" required/>
             </div>
             <div class="formGroup">
-              <input type="password" name="password" id="password" placeholder="Password" required/>
+              <input 
+              type="password" 
+              name="password" 
+              id="password" 
+              placeholder="Password: must be a minimum of 8 characters, and contain at least one capital letter, one number, and special characters $, @, or #" 
+              required/>
             </div>
             <div class="formGroup">
               <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required/>
             </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button type="submit" class="btn__signup">Sign up</button>
           </form>
           <p class="toggle_signup">
@@ -91,6 +112,10 @@
               <i class="fa-brands fa-instagram"></i>
             </a>
           </span>
+          <!--  -->
+          <a href="/privacy">Privacy</a>
+          <a href="/terms-conditions">Terms and Conditions</a>
+        <!--  -->
         </div>
         <div class="footer__bottom-content">
           <p>@2023 C.H.O Blog</p>

@@ -8,22 +8,25 @@ setupDB();
 
 exports.otpView = async (req, res) => {
 
+    console.log('========GET REQUEST=========')
+    console.log(req.csrfToken())
+
     const {error, value } = uuidSchema.validate(req.params)
 
     if (error){
-        res.render('home', {error: error.details[0].message})
+        res.status(400).render('home', {error: error.details[0].message})
         return
     }
 
     const userExists = await User.query().findById(value.id)
 
     if (!userExists){ // start if
-  
+
         // redirect to login cause user doesn't exists
-        res.render('login', {error: 'No such user'})
+        res.status(404).render('login', {error: 'No such user'})
         return
     }else{
-        res.render("otp", {user: userExists.id});
+        res.status(200).render("otp", {user: userExists.id});
     }
 
     
@@ -32,12 +35,16 @@ exports.otpView = async (req, res) => {
 
 exports.processOTP = async (req, res) => {
 
+    console.log('========POST REQUEST=========')
+    console.log(req.body._csrf)
+    delete req.body._csrf
+
     const new_req_obj = {...req.body, ...req.params}
 
     const {error, value} = otpSchema.validate(new_req_obj)
        
     if (error){
-        res.render('login', {error: error.details[0].message})
+        res.status(400).render('login', {error: error.details[0].message})
         return
     }
 
@@ -47,7 +54,7 @@ exports.processOTP = async (req, res) => {
   if (!userExists){ // start if
 
       // redirect to login cause user doesn't exists
-      res.render('login', {error: 'No such user exists'})
+      res.status(404).render('login', {error: 'No such user exists'})
       return
 
   } // end if
@@ -58,7 +65,7 @@ exports.processOTP = async (req, res) => {
 
     // redirect to login cause user doesn't exists
     // otp has expired
-    res.render('login', {error: 'Invalid OTP'})
+    res.status(401).render('login', {error: 'Invalid OTP'})
     return
 
 } // end if
@@ -69,12 +76,12 @@ exports.processOTP = async (req, res) => {
   if (current_timestamp > userExists.expiration_time){
     console.log("expired")
     // otp has expired
-    res.render('login', {error: 'OTP has expired'})
+    res.status(401).render('login', {error: 'OTP has expired'})
     return
 
   }else{
     req.flash('success', `Login Successful`)
     req.session.userId = userExists.id
-    res.redirect("/")  }
+    res.status(200).redirect("/")  }
 
 }

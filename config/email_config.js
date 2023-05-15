@@ -19,7 +19,7 @@ function mailObject(to_email, subject, message){
         from: '"CMP7038B" <tipstar3@gmail.com>', // sender email address
         to: to_email, // receiver email address
         subject: subject,
-        text: message
+        text: message,
     }
 }
 
