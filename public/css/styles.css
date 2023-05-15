@@ -254,13 +254,20 @@ header {
   font-size: 12px;
   font-weight: 600;
 }
+
 .forgot-pass {
+  font-size: medium;
   margin-left: auto;
   background-color: rgba(0, 0, 0, 0);
   border: none;
   outline: none;
   color: red;
 }
+#forgot-pass{
+  color: red;
+}
+
+
 .searchbar-container {
   padding: 10px;
   display: flex;
@@ -457,6 +464,3 @@ header {
   background-color: #DFF2BF;
 }
 
-#forgot-pass{
-  color: red;
-}

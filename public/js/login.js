@@ -21,7 +21,7 @@ login_form.addEventListener("submit", e => {
 
     if (!isValidPassword){
         // invalid entry
-        messages.push("<i class='fa fa-times-circle'></i> Invalid Entry");
+        messages.push("<i class='fa fa-times-circle'></i> Invalid Email or Password Entry");
     }
 
 

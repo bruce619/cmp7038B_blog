@@ -29,18 +29,6 @@ function getRandomAlphanumericString(length){
     return str;
   }
 
-
-function loginRequired(req, res, next){
-    if (req.session && req.session.userId) {
-        // User is authenticated, proceed with the next
-        return next();
-    } else {
-        // User is not authenticated
-        // redirect to the login page
-        res.redirect('/login');
-    }
-}
-
 function generateOTP(){
   return Math.random().toString().substr(2, 6)
 }
@@ -64,8 +52,7 @@ module.exports = {
     hashPassword,
     comparePasswords,
     getRandomAlphanumericString,
-    loginRequired,
     generateOTP,
     getCurrentTimestamp,
-    otpTimestamp
+    otpTimestamp,   
 }

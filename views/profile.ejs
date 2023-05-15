@@ -43,6 +43,7 @@
         <div class="signup-container">
           
           <form action="/profile/<%= user.id %>" method="POST" id="profile-form" class="signup-form" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
             <div class="user">
               <h3><%= user.first_name %> <%= user.last_name %></h3>
               <div class="user-image">
@@ -75,10 +76,11 @@
             <div class="formGroup">
               <textarea
                 name="bio"
-                placeholder="Bio"
+                placeholder="Bio: only accept aplhanumeric characters and non-alphanumeric characters excluding < > ~ | \ / ) ( ^ $ [ ] { }"
                 id="bio"
                 cols="30"
-                rows="10" required><%= user.bio %></textarea>
+                rows="10"
+                required><%= user.bio %></textarea>
             </div>
             
               <label for="Auth" class="Auth_label">

@@ -38,6 +38,7 @@
         </div>
         <div class="signup-container">
           <form action="/login" method="POST" id="login-form" class="signup-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
             <div class="formGroup">
               <input type="emai" name="email" id="email" placeholder="email" required/>
             </div>
@@ -95,6 +96,10 @@
               <i class="fa-brands fa-instagram"></i>
             </a>
           </span>
+          <!--  -->
+            <a href="/privacy">Privacy</a>
+            <a href="/terms-conditions">Terms and Conditions</a>
+          <!--  -->
         </div>
         <div class="footer__bottom-content">
           <p>@2023 C.H.O Blog</p>

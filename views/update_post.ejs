@@ -42,11 +42,27 @@
         <div class="signup-container">
           <form action="/post/<%= post_id %>/update" method="POST" id="create-post-form" class="signup-form">
             <div class="formGroup">
-              <input type="text" name="title" id="title" placeholder="Post Title" value="<%= title %>" required/>
+              <input 
+              type="text" 
+              name="title" 
+              id="title" 
+              placeholder="Post Title" 
+              value="<%= title %>" 
+              required/>
             </div>
             <div class="formGroup">
-              <textarea class="form-control" name="body" id="body" cols="30" rows="10" placeholder="Update Post" required><%= body %></textarea>
+              <textarea 
+              class="form-control" 
+              name="body" 
+              id="body" 
+              cols="30" 
+              rows="10" 
+              placeholder="Update Post" 
+              required>
+              <%= body %>
+            </textarea>
             </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
             <button class="btn__signup justify-content-end">Update Post</button>
           </form>
           
