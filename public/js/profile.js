@@ -70,7 +70,6 @@ profile_form.addEventListener("submit", e => {
     const locationPattern = /^[a-zA-Z0-9][a-zA-Z0-9,\s]*$/;
     const isValidLocationPattern = locationPattern.test(user_location.value)
 
-    console.log(`Here ${bio.value}`)
     bio.value = bio.value.replace(/(<([^>]+)>)/ig, '')
     const generalTextPattern = /^[a-zA-Z0-9][a-zA-Z0-9,.!;:"?+=#@*-_\s]+$/;
     const isValidGenerateText = generalTextPattern.test(bio.value)
