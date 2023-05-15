@@ -71,7 +71,6 @@ exports.processRegistration = async (req, res) => {
               res.status(201).redirect('/login')
             }
           });
-
     })
     .catch((err)=>{
         console.error(err)
@@ -89,32 +88,50 @@ exports.verifyEmail = async (req, res) => {
         return
     }
 
-    const verificationTokenExists = await UserTemp.query().where("token", value.token).first()
-    if (verificationTokenExists){
+    // check if user exists
+    const userExist = await User.query().where('email', verificationTokenExists.email).first();
 
-        const user = {
-            first_name: verificationTokenExists.first_name,
-            last_name: verificationTokenExists.last_name,
-            email: verificationTokenExists.email,
-            username: verificationTokenExists.username,
-            password: verificationTokenExists.password,
-            is_verified: true
-        }
-
-        User.query()
-        .insert(user)
-        .then((newUser)=>{
-            req.session.userId = newUser.id
-            req.flash('success', `${newUser.first_name}, You have successfully verified your email!`)
-            res.status(201).redirect('/')
+    if (userExist){
+        userExist.$query().patch({is_verified: true})
+        .then((user)=>{
+            console.log(`Successfully verified user ${user}`)
+            res.status(401).render('login', {success: "Your Account has been verified"})
             return
         })
-        .catch((err)=>{
-        console.error(err)
-    })
     } else {
-        res.status(401).render('login', {error: "Invalid verification link token"})
-    }
+
+        const verificationTokenExists = await UserTemp.query().where("token", value.token).first()
+
+        if (verificationTokenExists){
+
+            const user = {
+                first_name: verificationTokenExists.first_name,
+                last_name: verificationTokenExists.last_name,
+                email: verificationTokenExists.email,
+                username: verificationTokenExists.username,
+                password: verificationTokenExists.password,
+                is_verified: true
+            }
+    
+            User.query()
+            .insert(user)
+            .then((newUser)=>{
+                req.session.userId = newUser.id
+                req.flash('success', `${newUser.first_name}, You have successfully verified your email!`)
+                res.status(201).redirect('/')
+                return
+            })
+            .catch((err)=>{
+            console.error(err)
+        })
+        } else {
+            res.status(401).render('login', {error: "Invalid verification link token"})
+        }
+
+
+    } 
+
+
 
 }
 
@@ -129,7 +146,7 @@ exports.loginView = async (req, res) => {
 // POST: login view
 exports.processLogin = async (req, res) => {
 
-    console.log('========POST REQUEST=========')
+    console.log('========processLogin POST REQUEST=========')
     console.log(req.body._csrf)
     delete req.body._csrf
 
@@ -159,7 +176,80 @@ exports.processLogin = async (req, res) => {
     }
 
     if (user.is_verified === false){
-        res.status(401).render('login', {info: 'You need to verify you account. Check the verification link in your email'})
+        res.status(401).send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Log In</title>
+            <!-- Fontawesome CDN  -->
+            <script src="https://kit.fontawesome.com/62765ee528.js" crossorigin="anonymous"></script>
+            <!-- css -->
+            <link rel="stylesheet" href="/css/styles.css" />
+            <!-- js -->
+            <script src="/js/login.js" defer></script>
+        </head>
+        <body>
+            <header>
+            <div class="container">
+                <nav class="navbar">
+                <div class="navbar__brand">
+                    <a href="/"><img src="/img/company-logo.png" alt="logo" /></a>
+                </div>
+                <div class="navbar__links">
+                    <ul>
+                    <li class="nav-link"><a href="/">Home</a></li>
+                    <li class="nav-link"><a href="/login">Login</a></li>
+                    <li class="nav-link"><a href="/register">Sign Up</a></li>
+                    </ul>
+                </div>
+                </nav>
+            </div>
+            </header>
+            <main>
+                <div class="container">
+                    <div class="signup-container">
+
+                    <div id="info-msg">
+                        <i class="fa fa-info-circle"></i>
+                        You need to verify you account. 
+                        Check the verification link in your email or
+                    </div>
+                    
+                    <button onclick="location.href='/send-verification'" type="button">Resend verification link</button>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="footer">
+            <div class="container">
+                <div class="footer__top-content">
+                <span>
+                    <a href="#">
+                    <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                </span>
+                <span>
+                    <a href="#">
+                    <i class="fa-brands fa-twitter"></i>
+                    </a>
+                </span>
+                <span>
+                    <a href="#">
+                    <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </span>
+                </div>
+                <div class="footer__bottom-content">
+                <p>@2023 C.H.O Blog</p>
+                </div>
+            </div>
+            </footer>
+        </body>
+        </html>
+        `)
         return
     }
 
@@ -288,8 +378,60 @@ exports.processForgotPassword = async (req, res) => {
     .catch((err)=>{
         console.error(err)
     })
+}
 
 
+// verification link page 'GET'
+exports.verificationLinkView = async (req, res) => {
+    console.log('========GET REQUEST=========')
+    console.log(req.csrfToken())
+    res.status(200).render('verification', {error: "", success: "", info: ""})
+    return
+}
+
+// verification link 'POST'
+exports.processVerificationLink = async (req, res) =>{
+
+    const _csrf = req.body._csrf
+    console.log(_csrf)
+    delete req.body._csrf
+
+    const {error, value} = forgotPasswordSchema.validate(req.body);
+
+    if (error){
+        res.status(400).render('login', {error: error.details[0].message})
+        return
+    }
+
+    // check if email exists
+    const emailExists = await UserTemp.query().where("email", value.email).first();
+    if (!emailExists){
+        res.status(404).render('login', {error: 'No user with this email exists'})
+        return
+    }
+
+    // send verification email
+    // Do something with the newly inserted user
+    const verification_link = `${req.protocol}://${req.get('host')}/verify/${emailExists.token}`;
+    const mailOptions = mailObject(
+        value.email,
+        "Email Verification Link",
+        `Here is your email verification link: ${verification_link}`
+        )
+
+    transporter.sendMail(mailOptions, function(err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Email sent successfully");
+            // res.status(201).redirect('/login')
+            res.status(201).render('login', {
+                success: 'Sucessful! A verification link has been sent to your email.',
+                info: 'Complete Your registration by verifying your email.',
+                csrfToken: req.csrfToken()
+            })
+        }
+        });
 }
 
 exports.createNewPasswordView = async (req, res) => {

@@ -13,5 +13,6 @@ router.get('/forgot-password', authController.forgotPasswordView);
 router.post('/forgot-password', authController.processForgotPassword);
 router.get('/reset-password/:token', authController.createNewPasswordView);
 router.post('/reset-password/:token', authController.processCreateNewPassword);
-
+router.get('/send-verification', authController.verificationLinkView);
+router.post('/send-verification', authController.processVerificationLink);
 module.exports = router;

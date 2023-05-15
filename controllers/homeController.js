@@ -80,3 +80,12 @@ exports.homeView = async (req, res) => {
     }
 
 }
+
+
+exports.privacyView = async (req, res) =>{
+    res.status(200).render("privacy", {})
+}
+
+exports.termsConditionsView = async (req, res) =>{
+    res.status(200).render("terms_and_conditions", {})
+}
