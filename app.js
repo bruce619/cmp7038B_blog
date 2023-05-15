@@ -14,7 +14,7 @@ const cookieParser = require('cookie-parser');
 
 const SECRET = process.env.SECRET_KEY
 
-const csrfProtection = csrf({secret: SECRET, maxAge: 4 * 60 * 1000});
+const csrfProtection = csrf({cookie: true, secret: SECRET, maxAge: 4 * 60 * 1000});
 
 // file upload storage with multer
 const storage = multer.diskStorage({

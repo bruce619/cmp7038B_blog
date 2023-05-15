@@ -68,7 +68,7 @@ exports.processRegistration = async (req, res) => {
               console.log("Email sent successfully");
               req.flash('success', 'Sucessful! A verification link has been sent to your email.')
               req.flash('info', 'Complete Your registration by verifying your email.')
-              res.status(201).redirect('/login')
+              res.status(302).redirect('/login')
             }
           });
     })
@@ -279,7 +279,7 @@ exports.processLogin = async (req, res) => {
             } else {
               console.log("OTP sent to email successfully");
               req.flash('info', `Check your email for your OTP token`)
-              res.status(200).redirect(`/auth/otp/${user.id}`)
+              res.status(302).redirect(`/auth/otp/${user.id}`)
             }
           });
 
@@ -310,7 +310,7 @@ exports.logout = async (req, res) => {
         // redirect to login and prevent going back to authenticated page
         res.set('cache-control', 'no-cache, no-store, must-revalidate')
         res.set('pragma', 'no-cache')
-        res.status(200).redirect('/login')
+        res.status(302).redirect('/login')
     });
 }
 
