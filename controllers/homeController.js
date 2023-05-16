@@ -43,7 +43,7 @@ exports.homeView = async (req, res) => {
         });
         return 
     }else{
-
+        
         const {error, value } = searchSchema.validate(req.query)
 
         // check if error exists in user input
@@ -88,4 +88,8 @@ exports.privacyView = async (req, res) =>{
 
 exports.termsConditionsView = async (req, res) =>{
     res.status(200).render("terms_and_conditions", {})
+}
+
+exports.reverifyView = async (req, res) =>{
+    res.status(200).render('re_verify', {})
 }

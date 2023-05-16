@@ -12,6 +12,9 @@ const path = require('path')
 const csrf = require('csurf')
 const cookieParser = require('cookie-parser');
 
+// initialize express
+const app = express()
+
 const SECRET = process.env.SECRET_KEY
 
 const csrfProtection = csrf({cookie: true, secret: SECRET, maxAge: 4 * 60 * 1000});
@@ -62,8 +65,12 @@ function checkCsrfToken(req, res, next){
   }
 }
 
-// initialize express
-const app = express()
+// use static files: css, js, img
+app.use(express.static('public'));
+
+// set view
+app.set('views', './views')
+app.set('view engine', 'ejs')
 
 // app port
 const port = config.app.port
@@ -102,11 +109,10 @@ app.use(session({
       // secure: Only set to true in production with SSL enabled
       // i.e., HTTPS is necessary for secure cookies. If secure is set, and you access your site over HTTP, 
       // the cookie will not be set.
-      secure: false,
-
+      secure: false, // true on live
       // httpOny: if true prevent client side JS from reading the cookie 
       // Only set to true if your are using HTTPS.
-      httpOnly: false,
+      httpOnly: false, // true on live.
 
       // session time out: session max age in miliseconds (10 min)
       // Calculates the Expires Set-Cookie attribute
@@ -115,25 +121,13 @@ app.use(session({
     }
   }));
 
-// initialize flash middleware
-app.use(flash());
+
 // initialize multer middleware
 app.use(file_upload.single("profile_picture"));
 // custom csrf protection middleware
 app.use(csrfProtection)
 app.use(createCsrfToken);
 app.use(checkCsrfToken);
-
-app.use(function(req, res, next) {
-  res.locals.success = req.flash('success');
-  res.locals.error = req.flash('error');
-  res.locals.info = req.flash('info');
-  if (req.method === 'GET'){
-    res.locals.csrfToken = req.csrfToken();
-  }
-  next();
-});
-
 
 // error handler for csrf token
 app.use(function (err, req, res, next) {
@@ -142,12 +136,15 @@ app.use(function (err, req, res, next) {
   res.status(403).send("Session has exired or form tampered with")
 })
 
-// use static files: css, js, img
-app.use(express.static('public'));
+// initialize flash middleware
+app.use(flash());
 
-// set view
-app.set('views', './views')
-app.set('view engine', 'ejs')
+app.use(function(req, res, next) {
+  res.locals.error = req.flash('error');
+  res.locals.success = req.flash('success');
+  res.locals.info = req.flash('info');
+  next();
+});
 
 
 // import your routes here

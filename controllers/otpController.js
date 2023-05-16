@@ -8,13 +8,10 @@ setupDB();
 
 exports.otpView = async (req, res) => {
 
-    console.log('========GET REQUEST=========')
-    console.log(req.csrfToken())
-
     const {error, value } = uuidSchema.validate(req.params)
 
     if (error){
-        res.status(400).render('home', {error: error.details[0].message})
+        res.render('home', {error: error.details[0].message})
         return
     }
 
@@ -23,10 +20,10 @@ exports.otpView = async (req, res) => {
     if (!userExists){ // start if
 
         // redirect to login cause user doesn't exists
-        res.status(404).render('login', {error: 'No such user'})
+        res.render('login', {error: 'Error occured when processing this. Try again', csrfToken: req.csrfToken()})
         return
     }else{
-        res.status(200).render("otp", {user: userExists.id});
+        res.render("otp", {user: userExists.id, csrfToken: req.csrfToken()});
     }
 
     
@@ -35,8 +32,6 @@ exports.otpView = async (req, res) => {
 
 exports.processOTP = async (req, res) => {
 
-    console.log('========POST REQUEST=========')
-    console.log(req.body._csrf)
     delete req.body._csrf
 
     const new_req_obj = {...req.body, ...req.params}
@@ -44,7 +39,7 @@ exports.processOTP = async (req, res) => {
     const {error, value} = otpSchema.validate(new_req_obj)
        
     if (error){
-        res.status(400).render('login', {error: error.details[0].message})
+        res.render('login', {error: error.details[0].message, csrfToken: req.csrfToken()})
         return
     }
 
@@ -54,7 +49,7 @@ exports.processOTP = async (req, res) => {
   if (!userExists){ // start if
 
       // redirect to login cause user doesn't exists
-      res.status(404).render('login', {error: 'No such user exists'})
+      res.render('login', {error: 'Invalid request', csrfToken: req.csrfToken()})
       return
 
   } // end if
@@ -65,7 +60,7 @@ exports.processOTP = async (req, res) => {
 
     // redirect to login cause user doesn't exists
     // otp has expired
-    res.status(401).render('login', {error: 'Invalid OTP'})
+    res.render('login', {error: 'Invalid or expired OTP', csrfToken: req.csrfToken()})
     return
 
 } // end if
@@ -74,14 +69,13 @@ exports.processOTP = async (req, res) => {
   current_timestamp = getCurrentTimestamp()
 
   if (current_timestamp > userExists.expiration_time){
-    console.log("expired")
     // otp has expired
-    res.status(401).render('login', {error: 'OTP has expired'})
+    res.render('login', {error: 'OTP is invalid or has expired', csrfToken: req.csrfToken()})
     return
 
   }else{
-    req.flash('success', `Login Successful`)
     req.session.userId = userExists.id
-    res.status(200).redirect("/")  }
+    req.flash('success', `Login Successful`)
+    res.redirect("/")  }
 
 }

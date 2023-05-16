@@ -1,10 +1,27 @@
 const chai = require("chai");
-const { loginSchema, searchSchema, uuidSchema, otpSchema } = require("../utility/validations");
+const { loginSchema, searchSchema, uuidSchema, otpSchema, registrationSchema } = require("../utility/validations");
 // assertion style "should", "expect" "assert"
 const expect = chai.expect;
 
 
-describe("Testing Login Schema", () =>{
+describe("Testing Schemas", () =>{
+
+    it("Test should pass if a valid user registration object is provided", ()=>{
+        // input object
+        const body = {
+            first_name: "Terry",
+            last_name: "John",
+            email: "tipstar3@gmail.com",
+            username: "Terry04",
+            password: "Ronan034@",
+            confirm_password: "Ronan034@",
+        };
+
+        const {error, value} = registrationSchema.validate(body);
+        expect(error).to.be.undefined;
+        expect(value).to.deep.equal(body)
+    })
+
 
     it("Test should pass if a valid login object is provided", ()=>{
         // input object
