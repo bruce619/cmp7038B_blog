@@ -43,7 +43,7 @@ exports.homeView = async (req, res) => {
         });
         return 
     }else{
-
+        
         const {error, value } = searchSchema.validate(req.query)
 
         // check if error exists in user input

@@ -9,17 +9,13 @@ setupDB();
 
 // GET: registration view
 exports.registerationView = async (req, res) => {
-    console.log('======== registerationView GET REQUEST=========')
-    // console.log(req.csrfToken())
-    res.render('register', {error: "", success: "", info: "", csrfToken: req.csrfToken()})
+    res.render('register', {csrfToken: req.csrfToken()})
     return
 }
 
 // POST: registration
 exports.processRegistration = async (req, res) => {
 
-    console.log('======== processRegistration POST REQUEST=========')
-    console.log(req.body._csrf)
     delete req.body._csrf
 
     // validate req.body data using the joi validation defined in the model
@@ -47,15 +43,13 @@ exports.processRegistration = async (req, res) => {
     // remove 
     delete value.confirm_password;
 
-    console.log(value)
-
     UserTemp.query()
     .insert(value)
     .then((newUser)=>{
 
         // Do something with the newly inserted user
         const verification_link = `${req.protocol}://${req.get('host')}/verify/${newUser.token}`;
-        console.log(verification_link)
+
         const mailOptions = mailObject(
             newUser.email,
             "Email Verification Link",
@@ -66,7 +60,6 @@ exports.processRegistration = async (req, res) => {
             if (err) {
               console.log("Error " + err);
             } else {
-              console.log("Email sent successfully");
               req.flash('success', `Sucessful! A verification link has been sent to your email!`)
               req.flash('info', `Complete Your registration by verifying your email!`)
               res.redirect("/login")
@@ -105,9 +98,9 @@ exports.verifyEmail = async (req, res) => {
         User.query()
         .insert(user)
         .then((newUser)=>{
-            req.session.userId = newUser.id
-            req.flash('success', `${newUser.first_name}, You have successfully verified your email!`)
-            res.redirect('/')
+            // req.session.userId = newUser.id
+            req.flash('success', `You have successfully verified your email!`)
+            res.redirect('/login')
             return
         })
         .catch((err)=>{
@@ -120,18 +113,15 @@ exports.verifyEmail = async (req, res) => {
 
 }
 
-// GET: login view
+// GET: login view Controller
 exports.loginView = async (req, res) => {
-    console.log('======== loginView GET REQUEST=========')
-    res.render('login', {error: "", success: "", info: "", csrfToken: req.csrfToken()})
+    res.render('login', {csrfToken: req.csrfToken()})
     return
 }
 
 // POST: login view
 exports.processLogin = async (req, res) => {
 
-    console.log('======== processLogin processLogin POST REQUEST=========')
-    console.log(req.body._csrf)
     delete req.body._csrf
 
     // validate login form data
@@ -148,7 +138,6 @@ exports.processLogin = async (req, res) => {
     if (!user){
         //check the user temp table
         const user_temp = UserTemp.query().where('email', value.email).first();
-
         if (user_temp){
             res.render('reverify', {})
             return
@@ -157,10 +146,8 @@ exports.processLogin = async (req, res) => {
             return
         }
     }
-
     // compare user input passwword and hashed user password that was saved in the db
     const passwordExists = await comparePasswords(value.password, user.password);
-
     // if it doesn't match return invalid email or password message
     if (!passwordExists){
         res.render('login', {error: "Invalid Email or Password", csrfToken: req.csrfToken()})
@@ -191,8 +178,7 @@ exports.processLogin = async (req, res) => {
             if (err) {
               console.log("Error " + err);
             } else {
-              console.log("OTP sent to email successfully");
-              req.flash('info', `Check your email for your OTP token`)
+              req.flash('info', `An OTP has been sent to your email`)
               res.redirect(`/auth/otp/${user.id}`)
             }
           });
@@ -230,16 +216,13 @@ exports.logout = async (req, res) => {
 
 // forget password page 
 exports.forgotPasswordView = async (req, res) => {
-    console.log('======== forgotPasswordView GET REQUEST=========')
-    res.render('forgot_password', {error: "", success: "", info: "", csrfToken: req.csrfToken()})
+    res.render('forgot_password', {csrfToken: req.csrfToken()})
     return
 }
 
 // handles post request to send the password retrieval link
 exports.processForgotPassword = async (req, res) => {
 
-    const _csrf = req.body._csrf
-    console.log(_csrf)
     delete req.body._csrf
 
     const {error, value} = forgotPasswordSchema.validate(req.body);
@@ -281,8 +264,7 @@ exports.processForgotPassword = async (req, res) => {
             if (err) {
               console.log("Error " + err);
             } else {
-              console.log("Email sent successfully");
-              req.flash('success', 'Email sent successfully')
+              req.flash("success", "Password reset link has been sent to your email")
               res.redirect("/login")
             }
           });
@@ -296,7 +278,6 @@ exports.processForgotPassword = async (req, res) => {
 
 // verification link page 'GET'
 exports.verificationLinkView = async (req, res) => {
-    console.log('======== verificationLinkView GET REQUEST=========')
     res.render('verification', {error: "", success: "", info: "", csrfToken: req.csrfToken()})
     return
 }
@@ -304,8 +285,6 @@ exports.verificationLinkView = async (req, res) => {
 // verification link 'POST'
 exports.processVerificationLink = async (req, res) =>{
 
-    const _csrf = req.body._csrf
-    console.log(_csrf)
     delete req.body._csrf
 
     const {error, value} = forgotPasswordSchema.validate(req.body);
@@ -335,7 +314,6 @@ exports.processVerificationLink = async (req, res) =>{
         if (err) {
             console.log("Error " + err);
         } else {
-            console.log("Email sent successfully");
             req.flash("success", "Sucessful! A verification link has been sent to your email.")
             req.flash("info", "Complete Your registration by verifying your email.")
             res.redirect('/login')
@@ -344,7 +322,6 @@ exports.processVerificationLink = async (req, res) =>{
 }
 
 exports.createNewPasswordView = async (req, res) => {
-    console.log('========createNewPasswordView GET REQUEST=========')
     const {error, value} = tokenSchema.validate(req.params)
 
     if (error){
@@ -359,7 +336,7 @@ exports.createNewPasswordView = async (req, res) => {
             res.render('forgot-password', {error: 'Token has expired or is Invalid', csrfToken: req.csrfToken()})
             return
         }
-        res.render("create_password", {reset_token: value.token, success: "", error: "", info: "", csrfToken: req.csrfToken()})
+        res.render("create_password", {reset_token: value.token, csrfToken: req.csrfToken()})
     })
     .catch((err)=>{
         console.error(err)
@@ -369,8 +346,6 @@ exports.createNewPasswordView = async (req, res) => {
 
 exports.processCreateNewPassword = async (req, res) => {
 
-    console.log('======== processCreateNewPassword POST REQUEST=========')
-    console.log(req.body._csrf)
     delete req.body._csrf
 
     const new_req_obj = {...req.body, ...req.params}

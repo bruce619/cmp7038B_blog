@@ -7,7 +7,6 @@ function hashPassword(password){
     const hash = bcrypt.hashSync(password, salt);
     return hash;
 }
-
 // function to compare hash password and normal password
 function comparePasswords(password, passWord){
   // password: user input password

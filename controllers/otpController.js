@@ -8,8 +8,6 @@ setupDB();
 
 exports.otpView = async (req, res) => {
 
-    console.log('======== otpView GET REQUEST=========')
-
     const {error, value } = uuidSchema.validate(req.params)
 
     if (error){
@@ -34,8 +32,6 @@ exports.otpView = async (req, res) => {
 
 exports.processOTP = async (req, res) => {
 
-    console.log('========processOTP POST REQUEST=========')
-    console.log(req.body._csrf)
     delete req.body._csrf
 
     const new_req_obj = {...req.body, ...req.params}
@@ -53,7 +49,7 @@ exports.processOTP = async (req, res) => {
   if (!userExists){ // start if
 
       // redirect to login cause user doesn't exists
-      res.render('login', {error: 'No such user exists', csrfToken: req.csrfToken()})
+      res.render('login', {error: 'Invalid request', csrfToken: req.csrfToken()})
       return
 
   } // end if
@@ -64,7 +60,7 @@ exports.processOTP = async (req, res) => {
 
     // redirect to login cause user doesn't exists
     // otp has expired
-    res.render('login', {error: 'Invalid OTP', csrfToken: req.csrfToken()})
+    res.render('login', {error: 'Invalid or expired OTP', csrfToken: req.csrfToken()})
     return
 
 } // end if
@@ -73,9 +69,8 @@ exports.processOTP = async (req, res) => {
   current_timestamp = getCurrentTimestamp()
 
   if (current_timestamp > userExists.expiration_time){
-    console.log("expired")
     // otp has expired
-    res.render('login', {error: 'OTP has expired', csrfToken: req.csrfToken()})
+    res.render('login', {error: 'OTP is invalid or has expired', csrfToken: req.csrfToken()})
     return
 
   }else{

@@ -7,8 +7,6 @@ setupDB();
 
 exports.profileView = async (req, res) => {
 
-  console.log('======== profileView GET REQUEST=========')
-
   const {error, value } = uuidSchema.validate(req.params)
 
   if (error){
@@ -16,12 +14,14 @@ exports.profileView = async (req, res) => {
       return
   }
 
+  // get user data using user id
   User.query()
   .findById(value.id)
   .then((user)=>{
     
     const current_user = req.session.userId;
-
+    // check if the current logged in user matches the user that created the post
+    // if both are not the same deny the request.
     if (current_user !== value.id){
       req.flash('error', `Permission Denied.`)
       res.redirect("/")
@@ -38,7 +38,6 @@ exports.profileView = async (req, res) => {
 
 
 exports.updateProfile = async (req, res) => {
-  console.log('======== updateProfilePOST REQUEST=========')
 
   if (req.file === undefined){
     req.file = {}
@@ -56,7 +55,6 @@ exports.updateProfile = async (req, res) => {
   }
   
 
-  console.log(req.body._csrf)
   delete req.body._csrf
 
   const new_req_obj = {...req.body, ...req.params}

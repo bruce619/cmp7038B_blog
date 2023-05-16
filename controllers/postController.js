@@ -28,15 +28,11 @@ exports.PostDetailView = async (req, res) => {
 
 
 exports.postView = async (req, res) => {
-    console.log('======== postView GET REQUEST=========')
     current_user = req.session.userId
     res.render('create_post', {current_user: current_user, csrfToken: req.csrfToken()})
 }
 
 exports.createPost = async (req, res) => {
-
-    console.log('======== createPost POST REQUEST=========')
-    console.log(req.body._csrf)
 
     delete req.body._csrf
 
@@ -59,7 +55,7 @@ exports.createPost = async (req, res) => {
             return console.log(`Error ${err}`);
         }
         // redirect to login
-        req.flash('error', `No such user`)
+        req.flash('error', `Error occurred`)
         res.redirect('/login')
         return
     });
@@ -71,7 +67,6 @@ exports.createPost = async (req, res) => {
         Post.query()
         .insert(value)
         .then((post)=>{
-            console.log(post)
             req.flash('success', `Successfully created Post!`)
             res.redirect('/')
         })
@@ -85,16 +80,13 @@ exports.createPost = async (req, res) => {
 
 exports.updatePostView = async (req, res) => {
 
-    console.log('======== updatePostView GET REQUEST=========')
-    console.log(req.csrfToken())
-
     const {error, value} = uuidSchema.validate(req.params)
 
     if (error){
         res.status(400).render('home', {error: error.details[0].message})
         return
     }
-
+    
     const postExists = await Post.query().withGraphFetched('user').findById(value.id).first();
 
     if (!postExists){
@@ -114,9 +106,6 @@ exports.updatePostView = async (req, res) => {
 }
 
 exports.updatePost = async (req, res) => {
-
-    console.log('======== updatePost POST REQUEST=========')
-    console.log(req.body._csrf)
 
     delete req.body._csrf
 
@@ -172,7 +161,7 @@ exports.deletePost = async (req, res) =>{
     const postExists = await Post.query().findById(value.id).withGraphFetched('user').first();
 
     if (!postExists){
-        req.flash('error', `No such post`)
+        req.flash('error', `Error occurred`)
         res.status(404).redirect("/")
         return
     }
@@ -181,7 +170,7 @@ exports.deletePost = async (req, res) =>{
 
     if (current_user !== postExists.user.id){
         req.flash('error', `Permission Denied. You are not the user`)
-        res.status(403).redirect("/")
+        res.redirect("/")
         return
     }
     
