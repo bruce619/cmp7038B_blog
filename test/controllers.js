@@ -41,10 +41,9 @@ describe('Controller Tests', ()=>{
 
     });
 
-    /**
-     * TEST POST
+   /**
+     * TEST POST login
      */
-
     describe("POST /login", ()=>{
 
     
@@ -76,10 +75,9 @@ describe('Controller Tests', ()=>{
 
             })// end
 
-
-
         }) // it
 
     }) // describe
+      
 
 })

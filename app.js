@@ -124,23 +124,20 @@ app.use(csrfProtection)
 app.use(createCsrfToken);
 app.use(checkCsrfToken);
 
-app.use(function(req, res, next) {
-  res.locals.success = req.flash('success');
-  res.locals.error = req.flash('error');
-  res.locals.info = req.flash('info');
-  if (req.method === 'GET'){
-    res.locals.csrfToken = req.csrfToken();
-  }
-  next();
-});
-
-
 // error handler for csrf token
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
   // handle CSRF token errors here
   res.status(403).send("Session has exired or form tampered with")
 })
+
+app.use(function(req, res, next) {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  res.locals.info = req.flash('info');
+  next();
+});
+
 
 // use static files: css, js, img
 app.use(express.static('public'));

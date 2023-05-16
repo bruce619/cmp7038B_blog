@@ -7,13 +7,12 @@ setupDB();
 
 exports.profileView = async (req, res) => {
 
-  console.log('========GET REQUEST=========')
-  console.log(req.csrfToken())
+  console.log('======== profileView GET REQUEST=========')
 
   const {error, value } = uuidSchema.validate(req.params)
 
   if (error){
-      res.status(400).render('home', {error: error.details[0].message})
+      res.render('home', {error: error.details[0].message})
       return
   }
 
@@ -24,12 +23,12 @@ exports.profileView = async (req, res) => {
     const current_user = req.session.userId;
 
     if (current_user !== value.id){
-      req.flash('error', `Permission Denied. You are not the user`)
-      res.status(403).redirect("/")
+      req.flash('error', `Permission Denied.`)
+      res.redirect("/")
       return
   }
 
-    res.status(200).render('profile', {user: user, current_user: current_user, csrfToken: req.csrfToken()});
+    res.render('profile', {user: user, current_user: current_user, csrfToken: req.csrfToken()});
   })
   .catch((err)=>{
     console.error(err)
@@ -39,6 +38,7 @@ exports.profileView = async (req, res) => {
 
 
 exports.updateProfile = async (req, res) => {
+  console.log('======== updateProfilePOST REQUEST=========')
 
   if (req.file === undefined){
     req.file = {}
@@ -56,7 +56,6 @@ exports.updateProfile = async (req, res) => {
   }
   
 
-  console.log('========POST REQUEST=========')
   console.log(req.body._csrf)
   delete req.body._csrf
 
@@ -65,7 +64,7 @@ exports.updateProfile = async (req, res) => {
   const {error, value} = profileSchema.validate(new_req_obj)
 
   if (error){
-      res.status(400).render('login', {error: error.details[0].message})
+      res.render('login', {error: error.details[0].message, csrfToken: req.csrfToken()})
       return
   }
 
@@ -81,7 +80,7 @@ exports.updateProfile = async (req, res) => {
       }
       // redirect to login
       req.flash('error', `Permission Denied`)
-      res.status(403).redirect('/login')
+      res.redirect('/login')
       return
   });
 
@@ -98,8 +97,8 @@ exports.updateProfile = async (req, res) => {
           return console.log(`Error ${err}`);
       }
       // redirect to login
-      req.flash('error', `No such user`)
-      res.status(404).redirect('/login')
+      req.flash('error', `Error validating user`)
+      res.redirect('/login')
       return
   });
   
@@ -112,7 +111,7 @@ exports.updateProfile = async (req, res) => {
   .update(value)
   .then(()=>{
     req.flash('success', `Updated Account Successfully`)
-    res.status(200).redirect('/')
+    res.redirect('/')
   })
   .catch((err)=>{
     console.error(err)

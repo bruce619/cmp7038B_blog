@@ -89,3 +89,7 @@ exports.privacyView = async (req, res) =>{
 exports.termsConditionsView = async (req, res) =>{
     res.status(200).render("terms_and_conditions", {})
 }
+
+exports.reverifyView = async (req, res) =>{
+    res.status(200).render('re_verify', {})
+}

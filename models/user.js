@@ -15,14 +15,14 @@ class UserTemp extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['first_name', 'last_name', 'email', 'username', 'password', 'token'],
+      required: ['first_name', 'last_name', 'username', 'email', 'password', 'token'],
 
       properties: {
         id: { type: 'integer' },
         firstName: { type: 'string', minLength: 1, maxLength: 200 },
         lastName: { type: 'string', minLength: 1, maxLength: 200 },
-        email: { type: 'string', pattern: '^[^\s@]+@[^\s@]+\.[^\s@]+$', minLength: 11 },
         username: { type: 'string', minLength: 3, maxLength: 55 },
+        email: { type: 'string'},
         password: { type: 'string', minLength: 8},
         token: {type: 'string', maxLength: 30},
         created_at: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$'},
