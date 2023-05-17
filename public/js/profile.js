@@ -67,15 +67,15 @@ profile_form.addEventListener("submit", e => {
     const isValidUsername = usernamePattern.test(username.value);
 
     // location pattern allow only alphanumeric strings at comma and space
-    const locationPattern = /^[a-zA-Z0-9][a-zA-Z0-9,\s]*$/;
+    const locationPattern = /^[a-zA-Z0-9,\s]*$/;
     const isValidLocationPattern = locationPattern.test(user_location.value)
 
     bio.value = bio.value.replace(/(<([^>]+)>)/ig, '')
-    const generalTextPattern = /^[a-zA-Z0-9][a-zA-Z0-9,.!;:"?+=#@*-_\s]+$/;
+    const generalTextPattern = /^[a-zA-Z0-9,.!;:"?+=#@*-_\s]*$/;
     const isValidGenerateText = generalTextPattern.test(bio.value)
 
     if (!isValidGenerateText){
-        messages.push("<i class='fa fa-times-circle'></i>Invalid text.")
+        messages.push("<i class='fa fa-times-circle'></i>Invalid text test.")
     }
 
     if (first_name.value.length === 0) {
@@ -111,9 +111,6 @@ profile_form.addEventListener("submit", e => {
         messages.push("<i class='fa fa-times-circle'></i>Invalid entry. Must have an email")
       }
 
-    if (user_location.value.length === 0){
-    messages.push("<i class='fa fa-times-circle'></i>Invalid entry. Must have an email")
-    }
 
     if (!isValidLocationPattern){
         messages.push("<i class='fa fa-times-circle'></i> Invalid location entry")

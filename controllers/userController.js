@@ -53,6 +53,14 @@ exports.updateProfile = async (req, res) => {
   }else{
     req.body.two_fa_enabled = Boolean(req.body.two_fa_enabled)
   }
+
+  if (!('location' in req.body)){
+    res.body.location = '';
+  }
+
+  if (!('bio' in req.body)){
+    res.body.bio = '';
+  }
   
 
   delete req.body._csrf

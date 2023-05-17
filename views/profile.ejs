@@ -71,7 +71,7 @@
               <input type="text" name="username" id="username" placeholder="Username" value="<%= user.username %>" required/>
             </div>
             <div class="formGroup">
-              <input type="text" name="location" id="location" placeholder="e.g Norwich, United Kingdom" value="<%= user.location %>" required/>
+              <input type="text" name="location" id="location" placeholder="e.g Norwich, United Kingdom" value="<%= user.location %>"/>
             </div>
             <div class="formGroup">
               <textarea
@@ -80,7 +80,7 @@
                 id="bio"
                 cols="30"
                 rows="10"
-                required><%= user.bio %></textarea>
+                ><%= user.bio %></textarea>
             </div>
             
               <label for="Auth" class="Auth_label">
