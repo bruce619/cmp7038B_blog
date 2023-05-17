@@ -32,6 +32,17 @@ exports.profileView = async (req, res) => {
   })
   .catch((err)=>{
     console.error(err)
+
+    req.session.destroy(function (err) {
+      if (err){
+          return console.log(`Error ${err}`);
+      }
+      // redirect to login
+      res.redirect('/login')
+      return
+  });
+
+
   })
 
 }
