@@ -65,7 +65,7 @@ describe('Controller Tests', ()=>{
                 .post("/login")
                 .set('cookie', res.headers['set-cookie'])
                 .set('content-type', 'application/x-www-form-urlencoded')
-                .send({ email: "petrobruz@gmail.com", password: "Testing123@", _csrf: csrfToken})
+                .send({ email: "tipstar3@gmail.com", password: "Tester1234@", _csrf: csrfToken})
                 .end((err, res)=>{
                     if (err) return done(err)
                     res.should.have.status(200)

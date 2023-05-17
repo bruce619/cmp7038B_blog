@@ -10,20 +10,51 @@ exports.PostDetailView = async (req, res) => {
     const {error, value } = uuidSchema.validate(req.params)
 
     if (error){
-        res.status(400).render('home', {error: error.details[0].message})
+        res.render('home', {error: error.details[0].message})
         return
     }
+
+    try {
 
     const post = await Post.query().findById(value.id).withGraphFetched('user').first();
 
+        
     if (!post){
-        res.status(404).render('home', {error: "Post no longer exists"})
+        // res.render('home', {error: "Invalid performing"})
+        // return
+            // destroy session
+    req.session.destroy(function (err) {
+        if (err){
+            return console.log(`Error ${err}`);
+        }
+        // redirect to login
+        req.flash('error', `Error occurred`)
+        res.redirect('/login')
         return
+    });
+
+    }else{
+        const current_user = req.session.userId
+
+        res.render('post_detail', {post: post, current_user: current_user});
+    }
+    
+    }catch (err){
+
+        req.session.destroy(function (err) {
+            if (err){
+                return console.log(`Error ${err}`);
+            }
+            // redirect to login
+            res.redirect('/login')
+            return
+        });
+    
+    
     }
 
-    const current_user = req.session.userId
 
-    res.status(200).render('post_detail', {post: post, current_user: current_user});
+
 }
 
 

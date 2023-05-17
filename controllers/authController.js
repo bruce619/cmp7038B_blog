@@ -153,9 +153,9 @@ exports.processLogin = async (req, res) => {
         res.render('login', {error: "Invalid Email or Password", csrfToken: req.csrfToken()})
         return
     }
-
+    // if user has two_fa_enabled 
+    // send otp to user's email
     if (user.two_fa_enabled === true){
-
         const otp = generateOTP()
         const timestamp_ = otpTimestamp()
 

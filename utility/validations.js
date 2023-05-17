@@ -32,10 +32,11 @@ const namePattern = /^[a-zA-Z]+$/
 const tokenPattern = /^[a-zA-Z0-9]+$/i
 const uuidPattern = /^[a-zA-Z0-9-]+$/i
 const searchPattern = /^[a-zA-Z0-9][a-zA-Z0-9,:.\s]*$/;
-const locationPattern = /^[a-zA-Z0-9][a-zA-Z0-9,\s]*$/;
+const locationPattern = /^[a-zA-Z0-9,\s]*$/;
 const picturePattern = /\.(jpe?g|png|)$/i
 const otpPattern = /^\d{6}$/
 const generalTextPattern = /^[a-zA-Z0-9][a-zA-Z0-9,.!;:"?+=#@*-_\s]+$/;
+const bioTextPattern = /^[a-zA-Z0-9,.!;:"?+=#@*-_\s]*$/;
 
 const postSchema = Joi.object({
   title: Joi.string().min(2).max(50).required()
@@ -182,15 +183,20 @@ const profileSchema = Joi.object({
   .required(),
   email: Joi.string().email().required(),
   username: Joi.string().alphanum().min(3).max(55).required(),
+  bio: Joi.string()
+  .allow('')
+  .optional()
+  .pattern(RegExp(bioTextPattern))
+  .messages({
+    'string.pattern.base': 'Invalid bio format.'
+  }),
   location: Joi.string()
-  .min(3)
-  .max(50)
+  .allow('')
+  .optional()
   .pattern(RegExp(locationPattern))
   .messages({
     'string.pattern.base': 'Invalid location entry.'
-  })
-  .required(),
-  bio: Joi.string().min(3).required(),
+  }),
   two_fa_enabled: Joi.boolean().optional(),
   profile_picture: Joi.string()
   .optional()

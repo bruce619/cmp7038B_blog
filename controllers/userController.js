@@ -32,6 +32,17 @@ exports.profileView = async (req, res) => {
   })
   .catch((err)=>{
     console.error(err)
+
+    req.session.destroy(function (err) {
+      if (err){
+          return console.log(`Error ${err}`);
+      }
+      // redirect to login
+      res.redirect('/login')
+      return
+  });
+
+
   })
 
 }
@@ -52,6 +63,14 @@ exports.updateProfile = async (req, res) => {
     req.body.two_fa_enabled = false;
   }else{
     req.body.two_fa_enabled = Boolean(req.body.two_fa_enabled)
+  }
+
+  if (!('location' in req.body)){
+    res.body.location = '';
+  }
+
+  if (!('bio' in req.body)){
+    res.body.bio = '';
   }
   
 
