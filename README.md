@@ -72,6 +72,10 @@ To run the Node app use
 ```bash
 npm start
 ```
+To run test
 
+```
+npm test
+``
 
 
