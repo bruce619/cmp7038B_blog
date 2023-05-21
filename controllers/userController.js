@@ -27,22 +27,20 @@ exports.profileView = async (req, res) => {
       res.redirect("/")
       return
   }
-
     res.render('profile', {user: user, current_user: current_user, csrfToken: req.csrfToken()});
+    return
   })
   .catch((err)=>{
     console.error(err)
-
     req.session.destroy(function (err) {
       if (err){
-          return console.log(`Error ${err}`);
+          console.log(`Error ${err}`);
+          res.redirect("/")
+          return 
       }
       // redirect to login
       res.redirect('/login')
-      return
   });
-
-
   })
 
 }
@@ -93,7 +91,9 @@ exports.updateProfile = async (req, res) => {
     // destroy session
     req.session.destroy(function (err) {
       if (err){
-          return console.log(`Error ${err}`);
+        console.log(`Error ${err}`);
+        res.redirect('/')
+        return
       }
       // redirect to login
       req.flash('error', `Permission Denied`)
@@ -111,7 +111,9 @@ exports.updateProfile = async (req, res) => {
     // destroy session
     req.session.destroy(function (err) {
       if (err){
-          return console.log(`Error ${err}`);
+          console.log(`Error ${err}`);
+          res.redirect('/')
+          return
       }
       // redirect to login
       req.flash('error', `Error validating user`)
@@ -129,9 +131,11 @@ exports.updateProfile = async (req, res) => {
   .then(()=>{
     req.flash('success', `Updated Account Successfully`)
     res.redirect('/')
+    return
   })
   .catch((err)=>{
     console.error(err)
+    res.redirect('/')
 })
 
 }
