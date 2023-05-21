@@ -20,12 +20,12 @@ exports.PostDetailView = async (req, res) => {
 
         
     if (!post){
-        // res.render('home', {error: "Invalid performing"})
-        // return
-            // destroy session
+    // destroy session
     req.session.destroy(function (err) {
         if (err){
-            return console.log(`Error ${err}`);
+            console.log(`Error ${err}`);
+            res.redirect('/login')
+            return
         }
         // redirect to login
         req.flash('error', `Error occurred`)
@@ -35,7 +35,6 @@ exports.PostDetailView = async (req, res) => {
 
     }else{
         const current_user = req.session.userId
-
         res.render('post_detail', {post: post, current_user: current_user});
     }
     
@@ -43,19 +42,15 @@ exports.PostDetailView = async (req, res) => {
 
         req.session.destroy(function (err) {
             if (err){
-                return console.log(`Error ${err}`);
+                console.log(`Error ${err}`);
+                res.redirect('/login')
+                return
             }
             // redirect to login
             res.redirect('/login')
-            return
-        });
-    
-    
-    }
-
-
-
-}
+        });   
+    };
+};
 
 
 exports.postView = async (req, res) => {
@@ -83,7 +78,9 @@ exports.createPost = async (req, res) => {
     // destroy session
     req.session.destroy(function (err) {
         if (err){
-            return console.log(`Error ${err}`);
+            console.log(`Error ${err}`);
+            res.redirect('/')
+            return 
         }
         // redirect to login
         req.flash('error', `Error occurred`)
@@ -97,12 +94,14 @@ exports.createPost = async (req, res) => {
 
         Post.query()
         .insert(value)
-        .then((post)=>{
-            req.flash('success', `Successfully created Post!`)
-            res.redirect('/')
+        .then(()=>{
+            req.flash('success', `Successfully created Post!`);
+            res.redirect('/');
+            return
         })
         .catch((err)=>{
             console.error(err)
+            res.redirect('/')
         })
 
     }
@@ -175,9 +174,11 @@ exports.updatePost = async (req, res) => {
     .then(()=>{
         req.flash('success', `Successfully updated post`)
         res.redirect(`/post-detail/${post_id}`)
+        return
     })
     .catch((err)=>{
         console.error(err)
+        res.redirect("/")
     })
 
 
@@ -193,7 +194,7 @@ exports.deletePost = async (req, res) =>{
 
     if (!postExists){
         req.flash('error', `Error occurred`)
-        res.status(404).redirect("/")
+        res.redirect("/")
         return
     }
 
@@ -211,10 +212,12 @@ exports.deletePost = async (req, res) =>{
     .delete()
     .then(()=>{
         req.flash('success', `Successfully deleted post`)
-        res.status(200).redirect("/")
+        res.redirect("/")
+        return
     })
     .catch((err)=>{
         console.error(err)
+        res.redirect("/")
     })
 
 }

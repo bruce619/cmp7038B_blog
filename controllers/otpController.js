@@ -76,6 +76,7 @@ exports.processOTP = async (req, res) => {
   }else{
     req.session.userId = userExists.id
     req.flash('success', `Login Successful`)
-    res.redirect("/")  }
+    res.redirect("/")
+}
 
 }

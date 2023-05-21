@@ -21,7 +21,7 @@ exports.homeView = async (req, res) => {
         total = await Post.query().resultSize();
         total_pages = Math.ceil(total / page_size);
 
-        res.status(200).render('home', {
+        res.render('home', {
             posts: posts, 
             search_results: '', 
             total_pages: total_pages,
@@ -34,7 +34,7 @@ exports.homeView = async (req, res) => {
         total = await Post.query().resultSize();
         total_pages = Math.ceil(total / page_size);
 
-        res.status(200).render('home', {
+        res.render('home', {
             posts: posts, 
             search_results: '', 
             total_pages: total_pages,
@@ -44,7 +44,7 @@ exports.homeView = async (req, res) => {
         return 
     }else{
         
-        const {error, value } = searchSchema.validate(req.query)
+        const {error, value} = searchSchema.validate(req.query)
 
         // check if error exists in user input
         if (error){
@@ -91,5 +91,5 @@ exports.termsConditionsView = async (req, res) =>{
 }
 
 exports.reverifyView = async (req, res) =>{
-    res.status(200).render('re_verify', {})
+    res.render('reverify', {})
 }

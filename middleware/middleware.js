@@ -18,7 +18,7 @@ function loginRequired(req, res, next){
     } else {
         // User is not authenticated
         // redirect to the login page
-        res.status(401).redirect('/login');
+        res.redirect('/login');
     }
 }
 

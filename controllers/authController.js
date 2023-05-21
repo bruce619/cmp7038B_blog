@@ -59,8 +59,10 @@ exports.processRegistration = async (req, res) => {
         transporter.sendMail(mailOptions, function(err, data) {
             if (err) {
               console.log("Error " + err);
+              res.redirect("/login")
+              return
             } else {
-              req.flash('success', `Sucessful! A verification link has been sent to your email!`)
+              req.flash('success', `Hi ${newUser.first_name}! A verification link has been sent to your email!`)
               req.flash('info', `Complete Your registration by verifying your email!`)
               res.redirect("/login")
             }
@@ -68,6 +70,8 @@ exports.processRegistration = async (req, res) => {
     })
     .catch((err)=>{
         console.error(err)
+        res.redirect("/login")
+        return
     })
         
 }
@@ -98,17 +102,18 @@ exports.verifyEmail = async (req, res) => {
         User.query()
         .insert(user)
         .then((newUser)=>{
-            // req.session.userId = newUser.id
-            req.flash('success', `You have successfully verified your email!`)
+            req.flash('success', `${newUser.first_name}, You have successfully verified your email!`)
             res.redirect('/login')
             return
         })
         .catch((err)=>{
         console.error(err)
+        res.redirect("/login")
+        return
     })
 
     } else {
-        res.render('login', {error: "Invalid verification link token"})
+        res.render('login', {error: "Invalid verification link token", csrfToken: req.csrfToken()})
     }
 
 }
@@ -134,7 +139,6 @@ exports.processLogin = async (req, res) => {
 
     // first check if the user exists
     const user = await User.query().where('email', value.email).first();
-    // if user doesn't exists return invalid or email
     if (!user){
         //check the user temp table
         const user_temp = UserTemp.query().where('email', value.email).first();
@@ -142,6 +146,7 @@ exports.processLogin = async (req, res) => {
             res.render('reverify', {})
             return
         }else{
+            // if user doesn't exists return invalid or email
             res.render('login', {error: "Invalid Email or Password", csrfToken: req.csrfToken()})
             return
         }
@@ -177,9 +182,14 @@ exports.processLogin = async (req, res) => {
         transporter.sendMail(mailOptions, function(err, data) {
             if (err) {
               console.log("Error " + err);
+              res.redirect("/login")
+              return
+
             } else {
               req.flash('info', `An OTP has been sent to your email`)
               res.redirect(`/auth/otp/${user.id}`)
+              return
+
             }
           });
 
@@ -187,6 +197,8 @@ exports.processLogin = async (req, res) => {
         })
         .catch((err)=>{
           console.error(err)
+          res.redirect("/login")
+          return
       })
 
         
@@ -194,9 +206,7 @@ exports.processLogin = async (req, res) => {
         req.session.userId = user.id
         res.redirect("/")
     }
-
-    
-    
+   
 }
 
 // GET: logout
@@ -241,6 +251,7 @@ exports.processForgotPassword = async (req, res) => {
         return
     }
 
+    // set reset token and expiry time
     const reset_token = getRandomAlphanumericString(30)
     const reset_token_expiry_time = otpTimestamp()
 
@@ -252,6 +263,7 @@ exports.processForgotPassword = async (req, res) => {
         reset_password_expiry_time: emailExists.reset_password_expiry_time
     }).then(()=>{
 
+        // password reset link
         const password_reset_link = `${req.protocol}://${req.get('host')}/reset-password/${reset_token}/`;
 
         const mailOptions = mailObject(
@@ -263,15 +275,19 @@ exports.processForgotPassword = async (req, res) => {
         transporter.sendMail(mailOptions, function(err, data) {
             if (err) {
               console.log("Error " + err);
+              res.redirect("/login")
+              return
             } else {
               req.flash("success", "Password reset link has been sent to your email")
               res.redirect("/login")
+              return
             }
           });
 
     })
     .catch((err)=>{
         console.error(err)
+        res.redirect("/login")
     })
 }
 
@@ -313,10 +329,12 @@ exports.processVerificationLink = async (req, res) =>{
     transporter.sendMail(mailOptions, function(err, data) {
         if (err) {
             console.log("Error " + err);
+            res.redirect("/login");
+            return
         } else {
-            req.flash("success", "Sucessful! A verification link has been sent to your email.")
-            req.flash("info", "Complete Your registration by verifying your email.")
-            res.redirect('/login')
+            req.flash("success", "Sucessful! A verification link has been sent to your email.");
+            req.flash("info", "Complete Your registration by verifying your email.");
+            res.redirect('/login');
         }
         });
 }
@@ -337,9 +355,11 @@ exports.createNewPasswordView = async (req, res) => {
             return
         }
         res.render("create_password", {reset_token: value.token, csrfToken: req.csrfToken()})
+        return
     })
     .catch((err)=>{
         console.error(err)
+        res.redirect('/login');
     })
 
 }
@@ -374,14 +394,18 @@ exports.processCreateNewPassword = async (req, res) => {
         .then(()=>{
             req.flash("success", "Password Reset Successful")
             res.redirect("/login")
+            return
         })
         .catch((err)=>{
             console.error(err)
+            res.redirect("/login")
+            return
         })
 
     })
     .catch((err)=>{
         console.error(err)
+        res.redirect("/login")
     })
 
     
